@@ -25,38 +25,36 @@ public class AppConfig {
                 .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize ->
                         authorize
-                                .requestMatchers("/auth/signup", "/auth/signin").permitAll()  // ✅ Allow public access
-                                .requestMatchers("api/admin/**").hasAnyRole("RESTAURANT", "ADMIN")
+                                .requestMatchers("/auth/signup", "/auth/signin").permitAll()  // Allow public access
+                                .requestMatchers("/api/admin/**").hasAnyRole("RESTAURANT", "ADMIN")
                                 .requestMatchers("/api/**").authenticated()  // Require authentication for other API endpoints
                                 .anyRequest().permitAll()
                 )
                 .addFilterBefore(new JwtTokenValidator(), BasicAuthenticationFilter.class)
-                .csrf(csrf -> csrf.disable())
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()));
+                .csrf(csrf -> csrf.disable())  // Disable CSRF since we are using stateless authentication
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()));  // Enable CORS
 
         return httpSecurity.build();
     }
-
 
     private CorsConfigurationSource corsConfigurationSource() {
         return new CorsConfigurationSource() {
             @Override
             public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
                 CorsConfiguration configuration = new CorsConfiguration();
-                configuration.setAllowedOrigins(Arrays.asList("http://localhost/5000"));
+                // Dynamically add allowed origins based on the environment
+                configuration.setAllowedOrigins(Arrays.asList("http://localhost:5000", "http://your-production-url.com"));
                 configuration.setAllowedHeaders(Collections.singletonList("*"));
                 configuration.setExposedHeaders(Arrays.asList("Authorization"));
-                configuration.addAllowedMethod("*");
-                configuration.setAllowCredentials(true);
+                configuration.addAllowedMethod("*");  // Allow all HTTP methods
+                configuration.setAllowCredentials(true);  // Allow credentials (cookies, authorization headers)
                 return configuration;
             }
         };
     }
 
     @Bean
-    PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
+    PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();  // Use BCrypt for password hashing
     }
 }
-
-
