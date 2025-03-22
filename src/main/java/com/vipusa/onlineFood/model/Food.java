@@ -1,10 +1,7 @@
 package com.vipusa.onlineFood.model;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,5 +23,15 @@ public class Food {
     private Double price;
 
     private String description;
+
+    @ManyToOne
+    @JoinColumn(name = "restaurant_id")
+    private Restaurant restaurant;
+
+    private Boolean availability;
+
+    private Boolean vegetarian;
+
+    private String image;
 
 }

@@ -1,6 +1,20 @@
 package com.vipusa.onlineFood.request;
 
-public class CreateRestaurantRequest {
+import com.vipusa.onlineFood.model.RESTAURANT_TYPE;
+import lombok.Getter;
+import lombok.Setter;
 
-    private Long id;
+import java.time.LocalTime;
+import java.util.List;
+
+@Getter
+@Setter
+public class CreateRestaurantRequest {
+    private String name;
+    private String address;
+    private RESTAURANT_TYPE restaurantType;
+    private LocalTime openingTime;
+    private LocalTime closingTime;
+    private List<String> phoneNumbers;
+    private String description;
 }

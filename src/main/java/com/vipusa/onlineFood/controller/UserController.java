@@ -22,10 +22,7 @@ public class UserController {
     public ResponseEntity<User> findUserJwtToken(
             @RequestHeader(value = "Authorization", required = true) String authorizationHeader) throws Exception {
 
-        // Extract token from "Bearer <token>"
-        String token = authorizationHeader.startsWith("Bearer ") ? authorizationHeader.substring(7) : authorizationHeader;
-
-        User user = userService.findUserByJwtToken(token);
+        User user = userService.findUserByJwtToken(authorizationHeader);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 

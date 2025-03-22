@@ -7,7 +7,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -25,17 +29,31 @@ public class Restaurant {
 
     private String address;
 
-    @OneToMany
-    @JoinColumn( name = "foods")
+    @OneToMany(mappedBy = "restaurant" , cascade = CascadeType.ALL)
     private List<Food> foodsList = new ArrayList<> ();
 
     private boolean isWorking;
 
+    @Enumerated(EnumType.STRING)
+    private RESTAURANT_TYPE restaurantType;
+
     @ElementCollection
-    private List<Double> phoneNumbers = new ArrayList<>();
+    private List<String> phoneNumbers = new ArrayList<>();
 
-    private Time openingTime;
+    private LocalTime openingTime;
 
-    private Time closingTime;
+    private LocalTime closingTime;
+
+    private String description;
+
+    private LocalDate registeredDate;
+
+    @ManyToOne
+    @JoinColumn(name = "owner_id")
+    private User owner;
+
+    private Boolean status = false;
+
+    private Boolean adminPermission = false;
 
 }
