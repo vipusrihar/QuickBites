@@ -1,4 +1,4 @@
-package com.vipusa.onlineFood.model;
+package com.vipusa.onlineFood.defaluts;
 
 public enum RESTAURANT_TYPE {
 

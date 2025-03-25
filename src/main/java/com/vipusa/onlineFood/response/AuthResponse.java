@@ -1,6 +1,6 @@
 package com.vipusa.onlineFood.response;
 
-import com.vipusa.onlineFood.model.USER_ROLE;
+import com.vipusa.onlineFood.defaluts.USER_ROLE;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

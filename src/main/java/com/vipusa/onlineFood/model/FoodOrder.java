@@ -1,5 +1,6 @@
 package com.vipusa.onlineFood.model;
 
+import com.vipusa.onlineFood.defaluts.ORDER_STATUS;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -29,7 +30,7 @@ public class FoodOrder {
 
     private Date deliveredAt;
 
-    private String orderStatus;
+    private ORDER_STATUS orderStatus;
 
     private Double amount;
 

@@ -1,6 +1,6 @@
 package com.vipusa.onlineFood.service;
 
-import com.vipusa.onlineFood.model.USER_ROLE;
+import com.vipusa.onlineFood.defaluts.USER_ROLE;
 import com.vipusa.onlineFood.model.User;
 import com.vipusa.onlineFood.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
