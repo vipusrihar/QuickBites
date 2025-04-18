@@ -18,12 +18,12 @@ public class Cart {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @OneToOne
-    @JoinColumn(name = "relevantUser")
+    @JoinColumn(name = "relevantUser", referencedColumnName ="id" )
     private User user;
 
-//    @ElementCollection
-//    private List<CartItem> cartItemList = new ArrayList<>();
+    @ElementCollection
+    private List<Food> foods = new ArrayList<>();
 }

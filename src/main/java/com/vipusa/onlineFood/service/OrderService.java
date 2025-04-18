@@ -8,11 +8,13 @@ import java.util.List;
 
 public interface OrderService {
 
-    public FoodOrder createOrder(OrderRequest orderRequest);
+    public FoodOrder createOrder(OrderRequest orderRequest) throws Exception;
 
-    public FoodOrder deleteOrder(Long orderID);
+    public void deleteOrder(Long orderID) throws Exception;
 
-    public FoodOrder changeOrderStatus(Long orderId);
+    public FoodOrder changeOrderStatus(Long orderId) throws Exception;
+
+    public FoodOrder findById(Long orderId) throws Exception;
     
     public List<FoodOrder> findOrdersByUser(Long UserId);
     

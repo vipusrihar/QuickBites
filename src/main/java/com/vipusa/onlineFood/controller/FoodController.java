@@ -71,15 +71,6 @@ public class FoodController {
         return new ResponseEntity<>(foodList,HttpStatus.OK);
     }
 
-    @GetMapping("/search/{keyword}")
-    public ResponseEntity<List<Food>> searchFood(@RequestHeader("Authorization") String jwt,
-                                                 @PathVariable("keyword") String keyword) throws Exception{
-        User user = userService.findUserByJwtToken(jwt);
-        List<Food> foodList = foodService.searchFood(keyword);
-
-        return new ResponseEntity<>(foodList,HttpStatus.OK);
-    }
-
     @PutMapping("/updateStatus/{foodId}")
     public ResponseEntity<Food> updateAvailabilityStatus(@RequestHeader("Authorization") String jwt,
                                                          @PathVariable("foodId") Long id) throws Exception{
@@ -102,6 +93,12 @@ public class FoodController {
         return new ResponseEntity<>(nonVegFood,HttpStatus.OK);
     }
 
-
+    @GetMapping("search")
+    public ResponseEntity<List<Food>> searchFood(@RequestHeader("Authorization") String jwt,
+                                                 @RequestParam String name) throws Exception{
+        User user = userService.findUserByJwtToken(jwt);
+        List<Food> foodsList = foodService.searchFood(name);
+        return new ResponseEntity<>(foodsList,HttpStatus.OK);
+    }
 
 }

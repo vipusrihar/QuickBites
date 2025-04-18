@@ -4,6 +4,9 @@ import com.vipusa.onlineFood.defaluts.ORDER_STATUS;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -16,7 +19,7 @@ import java.util.List;
 public class FoodOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "userId")
@@ -26,9 +29,11 @@ public class FoodOrder {
     @JoinColumn(name = "restaurantId")
     private Restaurant restaurant;
 
-    private Date orderedAt;
+    private LocalDate orderedAt;
+    private LocalTime orderTime;
 
-    private Date deliveredAt;
+    private LocalDate deliveredAt;
+    private LocalTime deliverTime;
 
     private ORDER_STATUS orderStatus;
 
