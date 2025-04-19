@@ -6,24 +6,21 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Entity
 @AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
-public class Cart {
-
+@NoArgsConstructor
+public class CartItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "relevantUser", referencedColumnName ="id" )
-    private User user;
+    @ManyToOne
+    private Food food;
 
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
-    private List<CartItem> items = new ArrayList<>();
+    private int quantity;
+
+    @ManyToOne
+    private Cart cart;
 }

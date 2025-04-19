@@ -29,6 +29,6 @@ public interface RestaurantService {
 
     public void addFood(Long restaurantId, Food food) throws Exception;
 
-    public void deleteFood(Long restaurantId, Long foodId);
+    public void deleteFood(Long restaurantId, Long foodId) throws Exception;
 
 }

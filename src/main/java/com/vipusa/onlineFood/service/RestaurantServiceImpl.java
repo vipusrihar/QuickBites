@@ -3,6 +3,7 @@ package com.vipusa.onlineFood.service;
 import com.vipusa.onlineFood.model.Food;
 import com.vipusa.onlineFood.model.Restaurant;
 import com.vipusa.onlineFood.model.User;
+import com.vipusa.onlineFood.repository.FoodRepository;
 import com.vipusa.onlineFood.repository.RestaurantRepository;
 import com.vipusa.onlineFood.request.CreateRestaurantRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,10 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Autowired
     private RestaurantRepository restaurantRepository;
+
+    @Autowired
+    private FoodRepository foodRepository;
+
 
     @Override
     public Restaurant createRestaurant(CreateRestaurantRequest createRestaurantRequest, User user) {
@@ -107,7 +112,30 @@ public class RestaurantServiceImpl implements RestaurantService {
 
 
     @Override
-    public void deleteFood(Long restaurantId, Long foodId) {
+    public void deleteFood(Long restaurantId, Long foodId) throws Exception {
+        Restaurant restaurant = findRestaurantById(restaurantId);
 
+        // Find the food item
+        Food foodToDelete = null;
+        for (Food food : restaurant.getFoodsList()) {
+            if (food.getId().equals(foodId)) {
+                foodToDelete = food;
+                break;
+            }
+        }
+
+        if (foodToDelete == null) {
+            throw new Exception("Food item not found with id: " + foodId + " in restaurant id: " + restaurantId);
+        }
+
+        // Remove from restaurant's list
+        restaurant.getFoodsList().remove(foodToDelete);
+
+        // Remove from DB
+        foodRepository.deleteById(foodId);
+
+        // Update restaurant (optional if cascading is handled)
+        restaurantRepository.save(restaurant);
     }
+
 }

@@ -87,7 +87,7 @@ public class OrderServiceImpl implements OrderService{
                 foodOrder.setOrderStatus(ORDER_STATUS.STATUS_ACCEPTED);
             }
         }
-        return foodOrder;
+        return foodOrderRepository.save(foodOrder);
     }
 
     @Override
@@ -98,17 +98,17 @@ public class OrderServiceImpl implements OrderService{
 
     @Override
     public List<FoodOrder> findPreparingStatusOrders() {
-        return null;
+        return foodOrderRepository.findByOrderStatus(ORDER_STATUS.STATUS_PACKED);
     }
 
     @Override
     public List<FoodOrder> findDeliveredOrders() {
-        return null;
+        return foodOrderRepository.findByOrderStatus(ORDER_STATUS.STATUS_DELIVERED);
     }
 
     @Override
     public List<FoodOrder> findAllOrder() {
-        return null;
+        return foodOrderRepository.findAll();
     }
 
     @Override

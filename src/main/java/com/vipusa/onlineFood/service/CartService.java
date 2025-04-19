@@ -6,13 +6,13 @@ import com.vipusa.onlineFood.model.User;
 
 public interface CartService {
 
-    public Cart findByUser(Long UserId);
+    Cart findByUser(Long userId);
 
     public Cart addItemsToCart(User user, Food food);
 
     public Cart removeItemsFromCart ( User user, Long foodId);
 
-    public Cart updateCartItemQuantity(User user, Long foodId);
+    Cart updateCartItemQuantity(User user, Long foodId, int newQuantity);
 
 
 }
