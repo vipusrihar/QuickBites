@@ -7,6 +7,7 @@ import Navbar from './components/Navbar/Navbar.jsx';
 import { useState } from 'react';
 import Home from './components/Home/Home.jsx';
 import RestaurantDetails from './restaurant/RestaurantDetails.jsx';
+import Cart from './cart/Cart.jsx';
 
 function App() {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -17,7 +18,8 @@ function App() {
       <BrowserRouter>
         <Routes>
           {/* <Route path='/' element={<Home/>} /> */}
-          <Route path='/' element={<RestaurantDetails/>} />
+          {/* <Route path='/' element={<RestaurantDetails/>} /> */}
+          <Route path='/' element=<Cart/> />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
