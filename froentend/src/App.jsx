@@ -7,7 +7,7 @@ import Navbar from './components/Navbar/Navbar.jsx';
 import { useState } from 'react';
 import Home from './components/Home/Home.jsx';
 import RestaurantDetails from './restaurant/RestaurantDetails.jsx';
-import Cart from './cart/Cart.jsx';
+import Cart from './components/cart/Cart.jsx';
 
 function App() {
   const [isDarkMode, setIsDarkMode] = useState(false);
