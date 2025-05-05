@@ -1,19 +1,36 @@
-import { Avatar, IconButton, Switch } from '@mui/material';
+import { Avatar, IconButton, Switch, Box } from '@mui/material';
 import React from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import ModeNightIcon from '@mui/icons-material/ModeNight';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import ViewHeadlineIcon from '@mui/icons-material/ViewHeadline';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
-const Navbar = ({ isDarkMode, setIsDarkMode }) => {
+const Navbar = ({ isDarkMode, setIsDarkMode, setProfileNavOpen, profileNavBar }) => {
   const handleThemeChange = () => {
     setIsDarkMode(!isDarkMode);
   };
 
+  const isSmallScreen = useMediaQuery("(max-width:900px)")
+
   return (
-    <div className="px-5 z-50 py-[.8rem] bg-[#e91e63] lg:px-20 flex justify-between items-center">
+
+
+    <div className="sticky top-0 px-5 z-50 py-[.8rem] bg-[#e91e63] lg:px-20 flex justify-between items-center">
+
+
       <li className="logo font-semibold text-gray-300 text-2xl list-none">
+
+        {isSmallScreen && (
+          <IconButton onClick={() => setProfileNavOpen(prev => !prev)}>
+            <ViewHeadlineIcon />
+          </IconButton>
+        )}
+
+
+
         QuickBites
       </li>
 
@@ -38,6 +55,7 @@ const Navbar = ({ isDarkMode, setIsDarkMode }) => {
 
       </div>
     </div>
+
   );
 };
 

@@ -1,29 +1,44 @@
 import { ThemeProvider } from '@mui/material/styles';
 import { darkTheme } from '../src/Theme/DarkTheme.js';
-import { dayTheme} from '../src/Theme/DayTheme.js';
+import { dayTheme } from '../src/Theme/DayTheme.js';
 import { CssBaseline } from '@mui/material';
-import { BrowserRouter, Routes, Route } from 'react-router'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'; // Fixed
 import Navbar from './components/Navbar/Navbar.jsx';
 import { useState } from 'react';
 import Home from './components/Home/Home.jsx';
 import RestaurantDetails from './restaurant/RestaurantDetails.jsx';
 import Cart from './components/cart/Cart.jsx';
+import Profile from './components/Profile/Profile.jsx';
 
 function App() {
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [openSlideBar, setOpenSlideBar] = useState(false);
+
   return (
     <ThemeProvider theme={isDarkMode ? darkTheme : dayTheme}>
       <CssBaseline />
-      <Navbar isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
       <BrowserRouter>
+        <Navbar
+          isDarkMode={isDarkMode}
+          setIsDarkMode={setIsDarkMode}
+          setProfileNavOpen={setOpenSlideBar}
+          profileNavBar={openSlideBar}
+        />
         <Routes>
-          {/* <Route path='/' element={<Home/>} /> */}
-          {/* <Route path='/' element={<RestaurantDetails/>} /> */}
-          <Route path='/' element=<Cart/> />
+          {/* <Route path='/' element={<Home />} />
+          <Route path='/restaurant/:id' element={<RestaurantDetails />} />
+          <Route path='/cart' element={<Cart />} /> */}
+          <Route
+            path="/myprofile/*"
+            element={
+              <Profile openSlideBar={openSlideBar} setOpenSlideBar={setOpenSlideBar} />
+            }
+          />
+
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
-  )
+  );
 }
 
-export default App
+export default App;
