@@ -13,7 +13,7 @@ import { useNavigate } from 'react-router-dom';
 
 const menu = [
     { title: "Orders", icon: <ShoppingBagIcon /> },
-    { title: "Favourite", icon: <FavoriteBorderIcon /> },
+    { title: "Favourites", icon: <FavoriteBorderIcon /> },
     { title: "Address", icon: <AddReactionIcon /> },
     { title: "Notification", icon: <NotificationsIcon /> },
     { title: "Payment", icon: <AccountBalanceWalletIcon /> },

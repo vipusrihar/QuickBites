@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
 import ProfileNavigation from './ProfileNavigation'
 import { Route , Routes} from 'react-router-dom'
-import UserProfile from './UserProfile'
-import UserOrders from './UserOrders'
-import UserNotifications from './UserNotifications';
-import UserAddress from './UserAddress';
+import UserProfile from './UserProfile.jsx'
+import UserOrders from './UserOrders.jsx'
+import UserNotifications from './UserNotifications.jsx';
+import UserAddress from './UserAddress.jsx';
+import UserPayment  from './UserPayment.jsx';
+import UserFavourites from './UserFavourites.jsx'
 
 const Profile = ({ openSlideBar, setOpenSlideBar }) => {
   
@@ -14,12 +16,14 @@ const Profile = ({ openSlideBar, setOpenSlideBar }) => {
       <div className='sticky h-[80vh] lg:w-[20%]'>
       <ProfileNavigation open={openSlideBar} handleClose={() => setOpenSlideBar(false)} />
       </div>
-      <div className='lg:w-[80%]'>
+      <div className='lg:w-[80%] sticky '>
       <Routes>
         <Route path='/' element={<UserProfile/>}/>
-        <Route path='/orders' element={<UserOrders/>}/>
-        <Route path='/notifications' element={<UserNotifications/>}/>
-        <Route path='/address' element={<UserAddress/>}/>
+        <Route path='orders' element={<UserOrders/>}/>
+        <Route path='payment' element={<UserPayment/>}/>
+        <Route path='notifications' element={<UserNotifications/>}/>
+        <Route path='address' element={<UserAddress/>}/>
+        <Route path='favourites' element={<UserFavourites/>}/>
 
 
       </Routes>

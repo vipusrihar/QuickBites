@@ -1,7 +1,7 @@
 import React from 'react'
 import './Home.css'
 import MutliItemCarousel from './MultiItemCarousel';
-import RestaurantCard from '../../restaurant/restaurantCard';
+import RestaurantCard from '../restaurant/RestaurantCard'
 
 
 const restaurants = [1,1,2,3,2,3,2,]

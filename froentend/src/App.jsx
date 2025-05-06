@@ -6,7 +6,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'; // Fixed
 import Navbar from './components/Navbar/Navbar.jsx';
 import { useState } from 'react';
 import Home from './components/Home/Home.jsx';
-import RestaurantDetails from './restaurant/RestaurantDetails.jsx';
+import RestaurantDetails from './components/restaurant/RestaurantDetails.jsx';
 import Cart from './components/cart/Cart.jsx';
 import Profile from './components/Profile/Profile.jsx';
 
