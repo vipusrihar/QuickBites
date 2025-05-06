@@ -9,6 +9,7 @@ import Home from './components/Home/Home.jsx';
 import RestaurantDetails from './components/restaurant/RestaurantDetails.jsx';
 import Cart from './components/cart/Cart.jsx';
 import Profile from './components/Profile/Profile.jsx';
+import Auth from './components/auth/Auth.jsx';
 
 function App() {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -25,8 +26,8 @@ function App() {
           profileNavBar={openSlideBar}
         />
         <Routes>
-          {/* <Route path='/' element={<Home />} />
-          <Route path='/restaurant/:id' element={<RestaurantDetails />} />
+          <Route path='/' element={<Home />} />
+          {/* <Route path='/restaurant/:id' element={<RestaurantDetails />} />
           <Route path='/cart' element={<Cart />} /> */}
           <Route
             path="/myprofile/*"
@@ -36,6 +37,7 @@ function App() {
           />
 
         </Routes>
+        <Auth/>
       </BrowserRouter>
     </ThemeProvider>
   );

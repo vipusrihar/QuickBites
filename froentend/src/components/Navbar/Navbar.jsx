@@ -7,8 +7,11 @@ import LightModeIcon from '@mui/icons-material/LightMode';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ViewHeadlineIcon from '@mui/icons-material/ViewHeadline';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { useNavigate } from 'react-router-dom';
 
 const Navbar = ({ isDarkMode, setIsDarkMode, setProfileNavOpen, profileNavBar }) => {
+
+  const navigation = useNavigate();
   const handleThemeChange = () => {
     setIsDarkMode(!isDarkMode);
   };
@@ -28,9 +31,6 @@ const Navbar = ({ isDarkMode, setIsDarkMode, setProfileNavOpen, profileNavBar })
             <ViewHeadlineIcon />
           </IconButton>
         )}
-
-
-
         QuickBites
       </li>
 
@@ -44,7 +44,7 @@ const Navbar = ({ isDarkMode, setIsDarkMode, setProfileNavOpen, profileNavBar })
         </IconButton>
 
         <IconButton>
-          <AccountCircleIcon sx={{ fontSize: "2rem" }} />
+          <AccountCircleIcon sx={{ fontSize: "2rem" }} onClick={() => navigation('/account/login')} />
         </IconButton>
 
         {/* <Avatar sx={{ bgcolor: 'white', color: 'pink', width:'2rem', height : '2rem' }}>V</Avatar> */}
