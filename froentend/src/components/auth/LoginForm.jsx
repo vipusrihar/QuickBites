@@ -1,18 +1,23 @@
 import { Button, TextField, Typography } from '@mui/material'
 import { Field, Formik, Form } from 'formik'
 import React from 'react'
+import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import { loginUser } from '../state/Action'
 
 const intialValue = {
-  eamil: "",
+  email: "",
   password: ""
 }
 
 const LoginForm = () => {
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const handleSubmit = () => {
+  const handleSubmit = (values) => {
+    dispatch(loginUser({userData:values,navigate}))
+
 
   }
 
@@ -40,6 +45,7 @@ const LoginForm = () => {
             fullWidth
             variant="outlined"
             margin="normal"
+            type="password"
           />
 
           <Button sx={{mt:2, padding:"1rem"}} type='submit' fullWidth variant='contained'>

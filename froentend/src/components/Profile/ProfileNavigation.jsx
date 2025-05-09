@@ -9,7 +9,8 @@ import AddReactionIcon from '@mui/icons-material/AddReaction';
 import { Divider, Drawer } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useNavigate } from 'react-router-dom';
-
+import { useDispatch } from 'react-redux';
+import {logout} from '../state/Action'
 
 const menu = [
     { title: "Orders", icon: <ShoppingBagIcon /> },
@@ -23,10 +24,16 @@ const menu = [
 const ProfileNavigation = ({ open, handleClose }) => {
     const isSmallScreen = useMediaQuery("(max-width:900px)")
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     
     const handleNavigate = (item) => {
+        
         navigate(`/myprofile/${item.title.toLowerCase()}`);
-        if (isSmallScreen) handleClose(); // Automatically close drawer after navigating
+        if (isSmallScreen) handleClose();
+        if( item.title.toLowerCase() === "logout" ){
+            dispatch(logout());
+            navigate("/")
+        }
       };
       
 
