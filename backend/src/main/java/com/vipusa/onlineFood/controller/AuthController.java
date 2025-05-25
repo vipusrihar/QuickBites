@@ -15,11 +15,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
@@ -41,39 +40,53 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<AuthResponse> createUserHandler(@RequestBody User user) throws Exception {
+        // Check if user already exists
         User isUserExist = userRepository.findByEmail(user.getEmail());
         if (isUserExist != null) {
             throw new Exception("Email already exists");
         }
 
+        // Create the new user
         User createdUser = new User();
         createdUser.setEmail(user.getEmail());
         createdUser.setFirstName(user.getFirstName());
         createdUser.setLastName(user.getLastName());
         createdUser.setAddresses(user.getAddresses());
         createdUser.setRole(user.getRole());
+
+        // Encode the password before setting it
         createdUser.setPassword(passwordEncoder.encode(user.getPassword()));
 
+        // Save the user to the database
         User savedUser = userRepository.save(createdUser);
+        System.out.println("created");
 
+        // Create and save the user's cart
         Cart createdCart = new Cart();
         createdCart.setUser(savedUser);
         cartRepository.save(createdCart);
 
+        // Authenticate the user using the encoded password
         Authentication authentication = new UsernamePasswordAuthenticationToken(
-                savedUser.getEmail(), user.getPassword()
+                savedUser.getEmail(), user.getPassword() // Plain password passed here
         );
+
+        // This won't work if you try to authenticate with the plain password
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
+        // Generate JWT token for the authenticated user
         String jwt = jwtProvider.generateToken(authentication);
 
+        // Prepare the response with JWT and user details
         AuthResponse authResponse = new AuthResponse();
         authResponse.setJwt(jwt);
         authResponse.setMessage("Registration Success");
         authResponse.setRole(savedUser.getRole());
 
+        // Return the response
         return new ResponseEntity<>(authResponse, HttpStatus.CREATED);
     }
+
 
 
     @PostMapping("/signin")

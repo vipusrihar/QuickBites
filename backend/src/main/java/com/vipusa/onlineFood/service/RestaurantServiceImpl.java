@@ -30,7 +30,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         restaurant.setAddress(createRestaurantRequest.getAddress());
         restaurant.setOpeningTime(createRestaurantRequest.getOpeningTime());
         restaurant.setClosingTime(createRestaurantRequest.getClosingTime());
-        restaurant.setRestaurantType(createRestaurantRequest.getRestaurantType());
+        restaurant.setType(createRestaurantRequest.getRestaurantType());
         restaurant.setPhoneNumbers(new ArrayList<>(createRestaurantRequest.getPhoneNumbers()));
         restaurant.setDescription(createRestaurantRequest.getDescription());
         restaurant.setWorking(false);
@@ -52,7 +52,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         restaurant.setAddress(updateRestaurantRequest.getAddress());
         restaurant.setOpeningTime(updateRestaurantRequest.getOpeningTime());
         restaurant.setClosingTime(updateRestaurantRequest.getClosingTime());
-        restaurant.setRestaurantType(updateRestaurantRequest.getRestaurantType());
+        restaurant.setType(updateRestaurantRequest.getRestaurantType());
         restaurant.setPhoneNumbers(new ArrayList<>(updateRestaurantRequest.getPhoneNumbers()));
         restaurant.setDescription(updateRestaurantRequest.getDescription());
 
@@ -98,13 +98,13 @@ public class RestaurantServiceImpl implements RestaurantService {
         Restaurant restaurant = findRestaurantById(restaurantId);
 
         // Ensure food list is initialized
-        if (restaurant.getFoodsList() == null) {
-            restaurant.setFoodsList(new ArrayList<>());
+        if (restaurant.getMenuItems() == null) {
+            restaurant.setMenuItems(new ArrayList<>());
         }
 
         // Associate the food with the restaurant
         food.setRestaurant(restaurant);
-        restaurant.getFoodsList().add(food);
+        restaurant.getMenuItems().add(food);
 
         // Save updated restaurant
         restaurantRepository.save(restaurant);
@@ -117,7 +117,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 
         // Find the food item
         Food foodToDelete = null;
-        for (Food food : restaurant.getFoodsList()) {
+        for (Food food : restaurant.getMenuItems()) {
             if (food.getId().equals(foodId)) {
                 foodToDelete = food;
                 break;
@@ -129,7 +129,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         }
 
         // Remove from restaurant's list
-        restaurant.getFoodsList().remove(foodToDelete);
+        restaurant.getMenuItems().remove(foodToDelete);
 
         // Remove from DB
         foodRepository.deleteById(foodId);

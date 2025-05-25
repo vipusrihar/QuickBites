@@ -1,6 +1,6 @@
 package com.vipusa.onlineFood.service;
 
-import com.vipusa.onlineFood.defaluts.USER_ROLE;
+import com.vipusa.onlineFood.defaults.USER_ROLE;
 import com.vipusa.onlineFood.model.User;
 import com.vipusa.onlineFood.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ public class CustomerUserDetailsService implements UserDetailsService {
 
         USER_ROLE role = user.getRole();
         if(role == null) {
-            role = USER_ROLE.ROLE_USER;
+            role = USER_ROLE.USER;
         }
 
         List<GrantedAuthority> authorities = new ArrayList<>();

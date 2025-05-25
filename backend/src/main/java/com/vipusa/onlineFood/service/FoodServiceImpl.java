@@ -30,7 +30,7 @@ public class FoodServiceImpl implements FoodService{
         food.setName(foodRequest.getName());
         food.setPrice(foodRequest.getPrice());
         food.setDescription(foodRequest.getDescription());
-        food.setAvailability(false);
+        food.setAvailable(false);
         food.setVegetarian(foodRequest.getVegetarian());
         food.setRestaurant(restaurant);
 
@@ -72,7 +72,7 @@ public class FoodServiceImpl implements FoodService{
     @Override
     public Food updateAvailabilityStatus(Long foodId) throws Exception {
         Food food = findFoodById(foodId);
-        food.setAvailability(!food.getAvailability());
+        food.setAvailable(!food.isAvailable());
         return foodRepository.save(food);
     }
 
@@ -81,7 +81,7 @@ public class FoodServiceImpl implements FoodService{
         List<Food> foodList = foodRepository.findAll();
         List<Food> filteredList = new ArrayList<>();
         for(Food food : foodList){
-            if(food.getVegetarian()) {
+            if(food.isVegetarian()) {
                 filteredList.add(food);
             }
         }
@@ -93,7 +93,7 @@ public class FoodServiceImpl implements FoodService{
         List<Food> foodList = foodRepository.findAll();
         List<Food> filteredList = new ArrayList<>();
         for(Food food : foodList){
-            if(!food.getVegetarian()) {
+            if(!food.isVegetarian()) {
                 filteredList.add(food);
             }
         }

@@ -8,30 +8,35 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
+@Table(name = "food_items")
+@Getter @Setter
+@NoArgsConstructor @AllArgsConstructor
 public class Food {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
+//    @Positive
     private Double price;
 
+    @Lob
     private String description;
 
-    @ManyToOne
-    @JoinColumn(name = "restaurant_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "restaurant_id", nullable = false)
     private Restaurant restaurant;
 
-    private Boolean availability;
+    @Column(nullable = false)
+    private boolean available = true;
 
-    private Boolean vegetarian;
+    @Column(nullable = false)
+    private boolean vegetarian;
 
-    private String image;
+    @Column(nullable = false)
+    private String imagePath;
 
 }

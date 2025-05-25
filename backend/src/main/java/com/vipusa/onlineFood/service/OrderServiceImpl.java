@@ -1,7 +1,7 @@
 package com.vipusa.onlineFood.service;
 
-import com.vipusa.onlineFood.defaluts.ORDER_STATUS;
-import com.vipusa.onlineFood.model.FoodOrder;
+import com.vipusa.onlineFood.defaults.ORDER_STATUS;
+import com.vipusa.onlineFood.model.Order;
 import com.vipusa.onlineFood.model.Restaurant;
 import com.vipusa.onlineFood.model.User;
 import com.vipusa.onlineFood.repository.FoodOrderRepository;
@@ -14,8 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -34,86 +33,88 @@ public class OrderServiceImpl implements OrderService{
     private FoodOrderRepository foodOrderRepository;
 
     @Override
-    public FoodOrder createOrder(OrderRequest orderRequest) throws Exception {
-        FoodOrder foodOrder = new FoodOrder();
+    public Order createOrder(OrderRequest orderRequest) throws Exception {
+        Order foodOrder = new Order();
         User user = userRepository.findById(orderRequest.getUserId()).orElseThrow( () -> new Exception("User Not Found"));
         foodOrder.setUser(user);
 
         Restaurant restaurant = restaurantRepository.findById(orderRequest.getRestaurantId()).orElseThrow( () -> new Exception("Restaurant Not Found"));
         foodOrder.setRestaurant(restaurant);
 
-        foodOrder.setAmount(orderRequest.getAmount());
-        foodOrder.setOrderTime(LocalTime.now());
-        foodOrder.setOrderedAt(LocalDate.now());
+        foodOrder.setOrderedAt(LocalDateTime.now());
 
-        foodOrder.setOrderItemList(orderRequest.getOrderList());
+        foodOrder.setItems(orderRequest.getOrderList());
         return foodOrderRepository.save(foodOrder);
 
     }
 
     @Override
-    public FoodOrder findById(Long orderId) throws Exception{
-        FoodOrder foodOrder = foodOrderRepository.findById(orderId).orElseThrow(()->new Exception("Order Not Found"));
+    public Order findById(Long orderId) throws Exception{
+        Order foodOrder = foodOrderRepository.findById(orderId).orElseThrow(()->new Exception("Order Not Found"));
         return foodOrder;
     }
     @Override
     public void deleteOrder(Long orderID) throws Exception {
-        FoodOrder foodOrder = findById(orderID);
+        Order foodOrder = findById(orderID);
         foodOrderRepository.deleteById(orderID);
     }
 
     @Override
-    public FoodOrder changeOrderStatus(Long orderId) throws Exception {
-        FoodOrder foodOrder = findById(orderId);
-        ORDER_STATUS orderStatus =foodOrder.getOrderStatus();
+    public Order changeOrderStatus(Long orderId) throws Exception {
+        Order foodOrder = findById(orderId);
+        ORDER_STATUS orderStatus =foodOrder.getStatus();
         switch (orderStatus){
-            case STATUS_ACCEPTED -> {
-                foodOrder.setOrderStatus(ORDER_STATUS.STATUS_PACKED);
+            case ACCEPTED -> {
+                foodOrder.setStatus(ORDER_STATUS.PACKED);
                 break;
             }
-            case STATUS_NON_ACCEPTED -> {
-                foodOrder.setOrderStatus(ORDER_STATUS.STATUS_NON_ACCEPTED);
+            case REJECTED -> {
+                foodOrder.setStatus(ORDER_STATUS.REJECTED);
                 break;
             }
-            case STATUS_PACKED -> {
-                foodOrder.setOrderStatus(ORDER_STATUS.STATUS_OUT_FOR_DELIVERY);
+            case PACKED -> {
+                foodOrder.setStatus(ORDER_STATUS.OUT_FOR_DELIVERY);
                 break;
             }
-            case STATUS_OUT_FOR_DELIVERY -> {
-                foodOrder.setOrderStatus(ORDER_STATUS.STATUS_DELIVERED);
+            case OUT_FOR_DELIVERY -> {
+                foodOrder.setStatus(ORDER_STATUS.DELIVERED);
+                break;
+            }
+            case CANCELLED-> {
+                foodOrder.setStatus(ORDER_STATUS.CANCELLED);
                 break;
             }
             default -> {
-                foodOrder.setOrderStatus(ORDER_STATUS.STATUS_ACCEPTED);
+                foodOrder.setStatus(ORDER_STATUS.ACCEPTED);
             }
         }
         return foodOrderRepository.save(foodOrder);
     }
 
     @Override
-    public List<FoodOrder> findOrdersByUser(Long userId) {
-        List<FoodOrder> foodOrders = foodOrderRepository.findByUserId(userId);
+    public List<Order> findOrdersByUser(Long userId) {
+        List<Order> foodOrders = foodOrderRepository.findByUserId(userId);
         return foodOrders;
     }
 
     @Override
-    public List<FoodOrder> findPreparingStatusOrders() {
-        return foodOrderRepository.findByOrderStatus(ORDER_STATUS.STATUS_PACKED);
+    public List<Order> findPreparingStatusOrders() {
+        return foodOrderRepository.findByStatus(ORDER_STATUS.PACKED);
     }
 
     @Override
-    public List<FoodOrder> findDeliveredOrders() {
-        return foodOrderRepository.findByOrderStatus(ORDER_STATUS.STATUS_DELIVERED);
+    public List<Order> findDeliveredOrders() {
+        return foodOrderRepository.findByStatus(ORDER_STATUS.DELIVERED);
     }
 
     @Override
-    public List<FoodOrder> findAllOrder() {
+    public List<Order> findAllOrder() {
         return foodOrderRepository.findAll();
     }
 
     @Override
-    public List<FoodOrder> findOrdersByRestaurants(Long restaurantId) {
-        List<FoodOrder> foodOrders = foodOrderRepository.findByRestaurantId(restaurantId);
+    public List<Order> findOrdersByRestaurants(Long restaurantId) {
+        List<Order> foodOrders = foodOrderRepository.findByRestaurantId(restaurantId);
         return foodOrders;
     }
 }

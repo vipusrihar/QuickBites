@@ -1,5 +1,6 @@
 package com.vipusa.onlineFood.controller;
 
+import com.vipusa.onlineFood.defaults.RESTAURANT_STATUS;
 import com.vipusa.onlineFood.model.Restaurant;
 import com.vipusa.onlineFood.service.RestaurantService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +20,7 @@ public class AdminController {
                                                       @RequestHeader("Authorization") String jwt) throws Exception{
         Restaurant restaurant = restaurantService.findRestaurantById(id);
 
-        restaurant.setStatus(true);
-        restaurant.setAdminPermission(true);
+        restaurant.setStatus(RESTAURANT_STATUS.PENDING);
 
         return new ResponseEntity<>(restaurant,HttpStatus.OK);
 
@@ -28,10 +28,11 @@ public class AdminController {
 
     @PutMapping("/{id}/changeStatus")
     public ResponseEntity<Restaurant> changeStatusRestaurant(@PathVariable Long id,
+                                                      RESTAURANT_STATUS status,
                                                       @RequestHeader("Authorization") String jwt) throws Exception{
         Restaurant restaurant = restaurantService.findRestaurantById(id);
 
-        restaurant.setStatus(!restaurant.getStatus());
+        restaurant.setStatus(status);
 
         return new ResponseEntity<>(restaurant,HttpStatus.OK);
 

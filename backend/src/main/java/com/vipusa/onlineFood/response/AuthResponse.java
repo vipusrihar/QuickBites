@@ -1,6 +1,6 @@
 package com.vipusa.onlineFood.response;
 
-import com.vipusa.onlineFood.defaluts.USER_ROLE;
+import com.vipusa.onlineFood.defaults.USER_ROLE;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,6 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AuthResponse {
+
     private String jwt;
 
     private String message;

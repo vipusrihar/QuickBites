@@ -1,6 +1,6 @@
 package com.vipusa.onlineFood.controller;
 
-import com.vipusa.onlineFood.model.FoodOrder;
+import com.vipusa.onlineFood.model.Order;
 import com.vipusa.onlineFood.request.OrderRequest;
 import com.vipusa.onlineFood.service.FoodService;
 import com.vipusa.onlineFood.service.OrderService;
@@ -26,9 +26,9 @@ public class OrderController {
 
     //Create order
     @PostMapping("")
-    public ResponseEntity<FoodOrder> createOrder(@RequestBody OrderRequest orderRequest) {
+    public ResponseEntity<Order> createOrder(@RequestBody OrderRequest orderRequest) {
         try {
-            FoodOrder order = orderService.createOrder(orderRequest);
+            Order order = orderService.createOrder(orderRequest);
             return ResponseEntity.ok(order);
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
@@ -37,9 +37,9 @@ public class OrderController {
 
     //Get order by ID
     @GetMapping("/{orderId}")
-    public ResponseEntity<FoodOrder> getOrderById(@PathVariable Long orderId) {
+    public ResponseEntity<Order> getOrderById(@PathVariable Long orderId) {
         try {
-            FoodOrder order = orderService.findById(orderId);
+            Order order = orderService.findById(orderId);
             return ResponseEntity.ok(order);
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
@@ -48,39 +48,39 @@ public class OrderController {
 
     //Get orders by user
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<FoodOrder>> getOrdersByUser(@PathVariable Long userId) {
+    public ResponseEntity<List<Order>> getOrdersByUser(@PathVariable Long userId) {
         return ResponseEntity.ok(orderService.findOrdersByUser(userId));
     }
 
     //Get orders by restaurant
     @GetMapping("/restaurant/{restaurantId}")
-    public ResponseEntity<List<FoodOrder>> getOrdersByRestaurant(@PathVariable Long restaurantId) {
+    public ResponseEntity<List<Order>> getOrdersByRestaurant(@PathVariable Long restaurantId) {
         return ResponseEntity.ok(orderService.findOrdersByRestaurants(restaurantId));
     }
 
     //Get all orders
     @GetMapping("/all")
-    public ResponseEntity<List<FoodOrder>> getAllOrders() {
+    public ResponseEntity<List<Order>> getAllOrders() {
         return ResponseEntity.ok(orderService.findAllOrder());
     }
 
     //Get delivered orders
     @GetMapping("/delivered")
-    public ResponseEntity<List<FoodOrder>> getDeliveredOrders() {
+    public ResponseEntity<List<Order>> getDeliveredOrders() {
         return ResponseEntity.ok(orderService.findDeliveredOrders());
     }
 
     //Get preparing orders (example: packed)
     @GetMapping("/preparing")
-    public ResponseEntity<List<FoodOrder>> getPreparingOrders() {
+    public ResponseEntity<List<Order>> getPreparingOrders() {
         return ResponseEntity.ok(orderService.findPreparingStatusOrders());
     }
 
     //Change order status (e.g., from accepted → packed → out for delivery → delivered)
     @PutMapping("/status/{orderId}")
-    public ResponseEntity<FoodOrder> changeOrderStatus(@PathVariable Long orderId) {
+    public ResponseEntity<Order> changeOrderStatus(@PathVariable Long orderId) {
         try {
-            FoodOrder updatedOrder = orderService.changeOrderStatus(orderId);
+            Order updatedOrder = orderService.changeOrderStatus(orderId);
             return ResponseEntity.ok(updatedOrder);
         } catch (Exception e) {
             return ResponseEntity.notFound().build();

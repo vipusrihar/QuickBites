@@ -1,6 +1,6 @@
 package com.vipusa.onlineFood.request;
 
-import com.vipusa.onlineFood.defaluts.RESTAURANT_TYPE;
+import com.vipusa.onlineFood.defaults.RESTAURANT_TYPE;
 import lombok.Getter;
 import lombok.Setter;
 

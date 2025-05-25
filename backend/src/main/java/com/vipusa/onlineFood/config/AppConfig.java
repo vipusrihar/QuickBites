@@ -43,7 +43,7 @@ public class AppConfig {
             public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
                 CorsConfiguration configuration = new CorsConfiguration();
                 // Dynamically add allowed origins based on the environment
-                configuration.setAllowedOrigins(Arrays.asList("http://localhost:5000", "http://your-production-url.com"));
+                configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173", "http://your-production-url.com"));
                 configuration.setAllowedHeaders(Collections.singletonList("*"));
                 configuration.setExposedHeaders(Arrays.asList("Authorization"));
                 configuration.addAllowedMethod("*");  // Allow all HTTP methods

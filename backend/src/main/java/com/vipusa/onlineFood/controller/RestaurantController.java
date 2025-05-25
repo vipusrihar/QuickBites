@@ -85,10 +85,18 @@ public class RestaurantController {
     }
 
     @PutMapping("/{id}/addFood")
-    public ResponseEntity<Restaurant> addFood(@RequestHeader("Authorization") String jwt,
+    public ResponseEntity<?> addFood(@RequestHeader("Authorization") String jwt,
                                               @PathVariable Long id,
                                               Food food) throws Exception{
-        return null;
+        User user = userService.findUserByJwtToken(jwt);
+        Restaurant restaurant = restaurantService.findRestaurantById(id);
+        restaurantService.addFood(id,food);
+
+        MessageResponse messageResponse = new MessageResponse();
+        messageResponse.setMessage(food.getName() + " added to " + user.getFirstName() +restaurant.getName());
+
+        return new ResponseEntity<>(messageResponse,HttpStatus.OK);
+
     }
 
 

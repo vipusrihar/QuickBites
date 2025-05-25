@@ -1,19 +1,19 @@
 package com.vipusa.onlineFood.repository;
 
-import com.vipusa.onlineFood.defaluts.ORDER_STATUS;
-import com.vipusa.onlineFood.model.FoodOrder;
+import com.vipusa.onlineFood.defaults.ORDER_STATUS;
+import com.vipusa.onlineFood.model.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface FoodOrderRepository extends JpaRepository<FoodOrder,Long> {
+public interface FoodOrderRepository extends JpaRepository<Order,Long> {
 
-    List<FoodOrder> findByUserId(Long userId);
+    List<Order> findByUserId(Long userId);
 
-    List<FoodOrder> findByRestaurantId(Long restaurantId);
+    List<Order> findByRestaurantId(Long restaurantId);
 
-    List<FoodOrder> findByOrderStatus(ORDER_STATUS status);
+    List<Order> findByStatus(ORDER_STATUS status);
 
 }

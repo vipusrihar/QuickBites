@@ -1,6 +1,6 @@
 package com.vipusa.onlineFood.request;
 
-import com.vipusa.onlineFood.model.Food;
+import com.vipusa.onlineFood.model.OrderItem;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,5 +18,5 @@ public class OrderRequest {
 
     private Double amount;
 
-    private List<Food> orderList = new ArrayList<Food>();
+    private List<OrderItem> orderList = new ArrayList<>();
 }
