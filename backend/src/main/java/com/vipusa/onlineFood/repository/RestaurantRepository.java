@@ -15,9 +15,7 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
     List<Restaurant> findByOwnerId(Long userId);
 
     @Query("SELECT r FROM Restaurant r WHERE " +
-            "(:query IS NULL OR LOWER(r.name) LIKE LOWER(CONCAT('%', :query, '%'))) OR " +
-            "(:query IS NULL OR EXISTS (" +
-            "  SELECT 1 FROM r.menuItems f WHERE " +
-            "  LOWER(f.name) LIKE LOWER(CONCAT('%', :query, '%'))))")
+            "(:query IS NULL OR LOWER(r.name) LIKE LOWER(CONCAT('%', :query, '%')) " +
+            "OR EXISTS (SELECT 1 FROM r.menuItems f WHERE LOWER(f.name) LIKE LOWER(CONCAT('%', :query, '%'))))")
     List<Restaurant> findBySearchQuery(@Param("query") String query);
 }

@@ -1,5 +1,6 @@
 package com.vipusa.onlineFood.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,6 +24,7 @@ public class Favorites {
     private Long id;
 
     @OneToOne
+    @JsonIgnore
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
@@ -32,11 +34,4 @@ public class Favorites {
             inverseJoinColumns = @JoinColumn(name = "restaurant_id"))
     private Set<Restaurant> restaurants = new HashSet<>();
 
-    public void addRestaurant(Restaurant restaurant) {
-        restaurants.add(restaurant);
-    }
-
-    public void removeRestaurant(Restaurant restaurant) {
-        restaurants.remove(restaurant);
-    }
 }

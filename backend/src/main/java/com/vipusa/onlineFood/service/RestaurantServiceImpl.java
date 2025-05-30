@@ -115,7 +115,6 @@ public class RestaurantServiceImpl implements RestaurantService {
     public void deleteFood(Long restaurantId, Long foodId) throws Exception {
         Restaurant restaurant = findRestaurantById(restaurantId);
 
-        // Find the food item
         Food foodToDelete = null;
         for (Food food : restaurant.getMenuItems()) {
             if (food.getId().equals(foodId)) {
@@ -128,13 +127,10 @@ public class RestaurantServiceImpl implements RestaurantService {
             throw new Exception("Food item not found with id: " + foodId + " in restaurant id: " + restaurantId);
         }
 
-        // Remove from restaurant's list
         restaurant.getMenuItems().remove(foodToDelete);
 
-        // Remove from DB
         foodRepository.deleteById(foodId);
 
-        // Update restaurant (optional if cascading is handled)
         restaurantRepository.save(restaurant);
     }
 

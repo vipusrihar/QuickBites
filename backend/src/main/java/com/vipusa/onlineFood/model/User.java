@@ -1,5 +1,6 @@
 package com.vipusa.onlineFood.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vipusa.onlineFood.defaults.USER_ROLE;
 import jakarta.persistence.*;

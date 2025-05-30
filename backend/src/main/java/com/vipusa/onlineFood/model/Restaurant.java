@@ -1,5 +1,6 @@
 package com.vipusa.onlineFood.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.vipusa.onlineFood.defaults.RESTAURANT_STATUS;
 import com.vipusa.onlineFood.defaults.RESTAURANT_TYPE;
 import jakarta.persistence.*;
@@ -56,6 +57,7 @@ public class Restaurant {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id", nullable = false)
+    @JsonIgnore
     private User owner;
 
     @Enumerated(EnumType.STRING)
