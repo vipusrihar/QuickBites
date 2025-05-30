@@ -8,18 +8,20 @@ import {
   GET_USER_REQUEST,
   GET_USER_SUCCESS,
   GET_USER_FAILURE,
-  ADD_TO_FAVOURITE_REQUEST,
-  ADD_TO_FAVOURITE_SUCCESS,
-  ADD_TO_FAVOURITE_FAILURE,
+  ADD_TO_FAVORITE_REQUEST,
+  ADD_TO_FAVORITE_SUCCESS,
+  ADD_TO_FAVORITE_FAILURE,
   LOGOUT,
 } from './ActionTypes';
-import { API_URL } from '../config/APi';
+import { API_URL } from '../../components/config/APi';
 
 export const registerUser = ({ userData, navigate }) => async (dispatch) => {
   dispatch({ type: REGISTER_REQUEST });
 
   try {
     const { data } = await axios.post(`${API_URL}/auth/signup`, userData);
+
+    console.log(data)
 
     if (data.jwt) {
       localStorage.setItem('jwt', data.jwt);
@@ -30,7 +32,7 @@ export const registerUser = ({ userData, navigate }) => async (dispatch) => {
       payload: data.jwt,
     });
 
-    if (data.role === "ROLE_RESTAURANT") {
+    if (data.role === "RESTAURANT") {
       navigate("/admin/restaurant");
     } else {
       navigate("/");
@@ -52,13 +54,15 @@ export const loginUser = (reqData) => async (dispatch) => {
   try {
     const { data } = await axios.post(`${API_URL}/auth/signin`, reqData.userData);
 
+    console.log(data)
+
     if (data.jwt) {
       localStorage.setItem("jwt", data.jwt);
     }
 
     dispatch({ type: LOGIN_SUCCESS, payload: data.jwt });
 
-    if (data.role === "ROLE_RESTAURANT_OWNER") {
+    if (data.role === "RESTAURANT") {
       reqData.navigate("/admin/restaurant");
     } else {
       reqData.navigate("/");
@@ -66,7 +70,7 @@ export const loginUser = (reqData) => async (dispatch) => {
 
   } catch (error) {
     dispatch({
-      type: REGISTER_FAILURE, // You might want to define LOGIN_FAILURE separately
+      type: REGISTER_FAILURE, 
       payload: error.response?.data || error.message,
     });
 
@@ -84,8 +88,12 @@ export const getUser = (jwt) => async (dispatch) => {
       },
     });
 
+    console.log(data);
+
     dispatch({ type: GET_USER_SUCCESS, payload: data });
     console.log("User fetched successfully:", data);
+    console.log(data.id);
+    localStorage.setItem("userId",data.id)
 
   } catch (error) {
     dispatch({
@@ -97,13 +105,12 @@ export const getUser = (jwt) => async (dispatch) => {
   }
 };
 
-export const addToFavourite = (jwt, restaurantId) => async (dispatch) => {
-  dispatch({ type: ADD_TO_FAVOURITE_REQUEST });
+export const addToFavorite = (jwt, restaurantId, userId) => async (dispatch) => {
+  dispatch({ type: ADD_TO_FAVORITE_REQUEST });
 
   try {
     const { data } = await axios.put(
-      `${API_URL}/api/restaurants/${restaurantId}/addFavourites`,
-      {},
+      `${API_URL}/api/user/${userId}/favorites/add/${restaurantId}`,{},
       {
         headers: {
           Authorization: `Bearer ${jwt}`,
@@ -111,18 +118,19 @@ export const addToFavourite = (jwt, restaurantId) => async (dispatch) => {
       }
     );
 
-    dispatch({ type: ADD_TO_FAVOURITE_SUCCESS, payload: data });
-    console.log("Added to favourites:", data);
+    dispatch({ type: ADD_TO_FAVORITE_SUCCESS, payload: data }); // assume backend returns updated list or restaurant
+    console.log("Added to favorites:", data);
 
   } catch (error) {
     dispatch({
-      type: ADD_TO_FAVOURITE_FAILURE,
+      type: ADD_TO_FAVORITE_FAILURE,
       payload: error.response?.data || error.message,
     });
 
-    console.error('Add to favourite error:', error.response || error.message);
+    console.error('Add to favorite error:', error.response || error.message);
   }
 };
+
 
 export const logout = () => async (dispatch) => {
   try {

@@ -1,9 +1,8 @@
-import React from 'react'
-import { Typography, Button, TextField, MenuItem, InputLabel, Select, Alert } from '@mui/material'
+import { Typography, Button, TextField, MenuItem,  Select,  } from '@mui/material'
 import { Formik, Form, Field } from 'formik'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
-import { registerUser } from '../state/Action'
+import { registerUser } from '../../state/authentication/Action'
 
 
 const initialValue = {
@@ -96,8 +95,8 @@ const RegisterForm = () => {
                 <MenuItem value="" disabled>
                   Select a role
                 </MenuItem>
-                <MenuItem value="ROLE_CUSTOMER">Customer</MenuItem>
-                <MenuItem value="ROLE_RESTAURANT">Restaurant Owner</MenuItem>
+                <MenuItem value="USER">Customer</MenuItem>
+                <MenuItem value="RESTAURANT">Restaurant Owner</MenuItem>
               </Select>
             )}
           </Field>

@@ -1,18 +1,19 @@
-import { isPresentInfavourites } from "../config/logic"
-import { 
-    ADD_TO_FAVOURITE_FAILURE, 
-    ADD_TO_FAVOURITE_REQUEST, 
-    ADD_TO_FAVOURITE_SUCCESS, 
-    GET_USER_FAILURE, 
-    GET_USER_REQUEST, 
-    GET_USER_SUCCESS, 
-    LOGIN_FAILURE, 
+import { isPresentInfavorites } from "../../components/config/logic"
+import {
+    ADD_TO_FAVORITE_FAILURE,
+    ADD_TO_FAVORITE_REQUEST,
+    ADD_TO_FAVORITE_SUCCESS,
+    GET_USER_FAILURE,
+    GET_USER_REQUEST,
+    GET_USER_SUCCESS,
+    LOGIN_FAILURE,
     LOGIN_SUCCESS,
-    LOGIN_REQUEST, 
-    REGISTER_FAILURE, 
-    REGISTER_REQUEST, 
-    REGISTER_SUCCESS, 
-    LOGOUT} from "./ActionTypes"
+    LOGIN_REQUEST,
+    REGISTER_FAILURE,
+    REGISTER_REQUEST,
+    REGISTER_SUCCESS,
+    LOGOUT
+} from "./ActionTypes"
 
 const initialState = {
     user: null,
@@ -32,7 +33,7 @@ export const authReducer = (state = initialState, action) => {
 
         case GET_USER_REQUEST:
 
-        case ADD_TO_FAVOURITE_REQUEST:
+        case ADD_TO_FAVORITE_REQUEST:
             return {
                 ...state,
                 isLoading: true,
@@ -53,13 +54,14 @@ export const authReducer = (state = initialState, action) => {
                 ...state,
                 isLoading: false,
                 user: action.payload,
-            }
-
-        case ADD_TO_FAVOURITE_SUCCESS:
-            const isAlreadyFav = isPresentInfavourites(state.favorites, action.payload);
+                favorites: action.payload.favorites?.restaurants || []
+            };
+        case ADD_TO_FAVORITE_SUCCESS:
+            const isAlreadyFav = isPresentInfavorites(state.favorites, action.payload);
             const updatedFavorites = isAlreadyFav
                 ? state.favorites.filter((item) => item.id !== action.payload.id)
                 : [action.payload, ...state.favorites];
+
             return {
                 ...state,
                 isLoading: false,
@@ -67,15 +69,17 @@ export const authReducer = (state = initialState, action) => {
                 favorites: updatedFavorites,
             };
 
+
         case REGISTER_FAILURE:
         case LOGIN_FAILURE:
         case GET_USER_FAILURE:
-        case ADD_TO_FAVOURITE_FAILURE:
-            return { 
-                ...state, 
-                isLoading: false, 
-                error: action.payload, 
-                sucess: null }
+        case ADD_TO_FAVORITE_FAILURE:
+            return {
+                ...state,
+                isLoading: false,
+                error: action.payload,
+                sucess: null
+            }
 
         case LOGOUT:
             return initialState

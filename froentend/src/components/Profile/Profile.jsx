@@ -6,7 +6,7 @@ import UserOrders from './UserOrders.jsx'
 import UserNotifications from './UserNotifications.jsx';
 import UserAddress from './UserAddress.jsx';
 import UserPayment  from './UserPayment.jsx';
-import UserFavourites from './UserFavourites.jsx'
+import UserFavorites from './UserFavorites.jsx'
 
 const Profile = ({ openSlideBar, setOpenSlideBar }) => {
   
@@ -23,7 +23,7 @@ const Profile = ({ openSlideBar, setOpenSlideBar }) => {
         <Route path='payment' element={<UserPayment/>}/>
         <Route path='notifications' element={<UserNotifications/>}/>
         <Route path='address' element={<UserAddress/>}/>
-        <Route path='favourites' element={<UserFavourites/>}/>
+        <Route path='favorites' element={<UserFavorites/>}/>
 
 
       </Routes>

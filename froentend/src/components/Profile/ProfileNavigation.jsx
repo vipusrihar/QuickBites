@@ -1,7 +1,6 @@
 import React from 'react'
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
-import HomeIcon from '@mui/icons-material/Home';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -10,11 +9,11 @@ import { Divider, Drawer } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import {logout} from '../state/Action'
+import {logout} from '../../state/authentication/Action'
 
 const menu = [
     { title: "Orders", icon: <ShoppingBagIcon /> },
-    { title: "Favourites", icon: <FavoriteBorderIcon /> },
+    { title: "Favorites", icon: <FavoriteBorderIcon /> },
     { title: "Address", icon: <AddReactionIcon /> },
     { title: "Notification", icon: <NotificationsIcon /> },
     { title: "Payment", icon: <AccountBalanceWalletIcon /> },

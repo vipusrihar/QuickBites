@@ -16,10 +16,10 @@ const Navbar = ({ isDarkMode, setIsDarkMode, setProfileNavOpen }) => {
   const isSmallScreen = useMediaQuery("(max-width:900px)");
 
   const handleAvatharClick = () => {
-    if(user.role === "ROLE_CUSTOMER"){
+    if(user.role === "CUSTOMER"){
       navigate('/myprofile')
     }else{
-      navigate('/admin/restaurant')
+      navigate('/myprofile')
     }
   }
 
@@ -48,7 +48,7 @@ const Navbar = ({ isDarkMode, setIsDarkMode, setProfileNavOpen }) => {
         <div>
           {user ? (
             <Avatar onClick={handleAvatharClick} sx={{ bgcolor: 'white', color: '#e91e63' }}>
-              {user.firstName[0].toUpperCase()}
+             {user?.firstName?.[0]?.toUpperCase() || ''}
             </Avatar>
           ) : (
             <IconButton onClick={() => navigate('/account/login')}>

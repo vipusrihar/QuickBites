@@ -11,10 +11,11 @@ import RestaurantDetails from './components/restaurant/RestaurantDetails';
 import Cart from './components/cart/Cart';
 import Profile from './components/Profile/Profile';
 import Auth from './components/auth/Auth';
-
 import { useDispatch, useSelector } from 'react-redux';
-import { getUser } from './components/state/Action';
-import { store } from './components/state/store';
+import { store } from './state/store'
+import { getUser } from './state/authentication/Action';
+import RegisterForm from './components/auth/RegisterForm';
+import LoginForm from './components/auth/LoginForm';
 
 function App() {
   const dispatch = useDispatch();
@@ -53,7 +54,12 @@ function App() {
               />
             }
           />
+          <Route path="/account/register" element={<RegisterForm />} />
+          <Route path="/account/login" element={<LoginForm/>} />
+            <Route path="/admin/restaurant" element={<Home/>} />
+
         </Routes>
+
         <Auth />
       </BrowserRouter>
     </ThemeProvider>

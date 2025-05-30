@@ -1,5 +1,4 @@
 import { Modal, Box } from '@mui/material';
-import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import LoginForm from './LoginForm';
 import RegisterForm from './RegisterForm';

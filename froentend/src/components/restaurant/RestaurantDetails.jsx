@@ -1,9 +1,11 @@
 import { Divider, FormControl, FormControlLabel, Grid, Radio, RadioGroup, Typography } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import MenuCard from "./MenuCard";
-
+import { useNavigate, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { getRestaurantById } from '../../state/restaurant/Action'
 const categories = ['pizza', 'biriyani', 'burger', 'chicken', 'rice'];
 
 const foodTypes = [
@@ -12,10 +14,29 @@ const foodTypes = [
     { label: 'Non Vegetarian', value: 'non-vegetarian' },
 ]
 
-const menu = [1,1,1,1,1,1,1]
+
+
+const menu = [1, 1, 1, 1, 1, 1, 1]
 const RestaurantDetails = () => {
 
     const [foodType, setFoodType] = useState("all");
+
+
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const jwt = localStorage.getItem("jwt");
+    const { restaurant } = useSelector((store) => store.restaurant);
+    const { auth } = useSelector(store => store);
+
+    console.log("auth", auth, "restaurant", restaurant);
+    const { id } = useParams();
+
+
+    useEffect(() => {
+        dispatch(getRestaurantById({ restaurantId: id, jwt }));
+    }, [dispatch, id, jwt]);
+
+
     const HandleFilter = (e) => {
         setFoodType(e.target.value)
     }
@@ -24,8 +45,6 @@ const RestaurantDetails = () => {
     return (
         <div>
             <section className="px-5 lg:px-10 py-5 min-h-screen">
-                <h3 className="text-sm text-gray-500 mb-1">Home / Restaurant / 3</h3>
-
                 <div className="p-4 max-w-6xl mx-auto">
                     <div className="w-full mb-0">
                         <img
@@ -51,24 +70,27 @@ const RestaurantDetails = () => {
 
                 <div className="pt-1 pb-5 pl-5">
                     <h1 className="text-2xl font-semibold">
-                        Shri Vani Vilas
+                        {restaurant.name}
                     </h1>
                     <p className="text-gray-500 mt-2 text-sm">
                         <span>
-                            straight to your doorstep, offering a wide
-                            range of cuisines from local gems to international favorites.
+                            {restaurant?.description
+                                ? `${restaurant.description} straight to your doorstep, offering a wide range of cuisines from local gems to international favorites.`
+                                : 'Straight to your doorstep, offering a wide range of cuisines from local gems to international favorites.'
+                            }
                         </span>
                     </p>
+
                     <p className="text-gray-500 text-sm flex items-center gap-3 mb-1">
                         <LocationOnIcon fontSize="22" />
                         <span>
-                            Colombo-18
+                            {restaurant.address}
                         </span>
                     </p>
                     <p className="text-gray-500 text-sm flex items-center gap-3">
                         <CalendarTodayIcon fontSize="22" />
                         <span>
-                            Mon-Sun 8.00am - 7.00pm
+                            {restaurant.openingTime} - {restaurant.closingTime}
                         </span>
                     </p>
 
@@ -99,7 +121,7 @@ const RestaurantDetails = () => {
                                     </RadioGroup>
                                 </FormControl>
 
-                                <Divider/>
+                                <Divider />
 
                                 <Typography variant="h5" sx={{ paddingBottom: '1rem' }}>
                                     Food Category
@@ -124,7 +146,7 @@ const RestaurantDetails = () => {
                 </div>
 
                 <div className="spcae-y-5 lg:w-[80%] lg:pl-10">
-                    {menu.map((item) => 
+                    {menu.map((item) =>
                         <MenuCard />
                     )}
                 </div>
