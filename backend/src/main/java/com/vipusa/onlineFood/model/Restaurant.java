@@ -1,6 +1,7 @@
 package com.vipusa.onlineFood.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.vipusa.onlineFood.defaults.RESTAURANT_STATUS;
 import com.vipusa.onlineFood.defaults.RESTAURANT_TYPE;
 import jakarta.persistence.*;
@@ -16,9 +17,12 @@ import java.util.List;
 
 @Entity
 @Table(name = "restaurants")
-@Getter @Setter
-@NoArgsConstructor @AllArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Restaurant {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,6 +34,7 @@ public class Restaurant {
     private String address;
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<Food> menuItems = new ArrayList<>();
 
     @Column(nullable = false)
@@ -63,6 +68,4 @@ public class Restaurant {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private RESTAURANT_STATUS status = RESTAURANT_STATUS.PENDING;
-
-
 }

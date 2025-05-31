@@ -31,8 +31,9 @@ public class FoodServiceImpl implements FoodService{
         food.setPrice(foodRequest.getPrice());
         food.setDescription(foodRequest.getDescription());
         food.setAvailable(false);
-        food.setVegetarian(foodRequest.getVegetarian());
         food.setRestaurant(restaurant);
+        food.setFoodType(foodRequest.getFoodType());
+        food.setCategory(foodRequest.getCategory());
 
         Food saveFood = foodRepository.save(food);
         return saveFood;
@@ -81,7 +82,7 @@ public class FoodServiceImpl implements FoodService{
         List<Food> foodList = foodRepository.findAll();
         List<Food> filteredList = new ArrayList<>();
         for(Food food : foodList){
-            if(food.isVegetarian()) {
+            if(food.getFoodType().equals("VEG")) {
                 filteredList.add(food);
             }
         }
@@ -93,7 +94,7 @@ public class FoodServiceImpl implements FoodService{
         List<Food> foodList = foodRepository.findAll();
         List<Food> filteredList = new ArrayList<>();
         for(Food food : foodList){
-            if(!food.isVegetarian()) {
+            if(food.getFoodType().equals("NONVEG")) {
                 filteredList.add(food);
             }
         }

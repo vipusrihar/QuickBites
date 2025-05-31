@@ -21,7 +21,7 @@ public class JwtProvider {
 
         return Jwts.builder()
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 30 * 60 * 1000))
+                .setExpiration(new Date(System.currentTimeMillis() + 60 * 60 * 1000))
                 .claim("email", auth.getName())
                 .claim("authorities", roles)
                 .signWith(key)

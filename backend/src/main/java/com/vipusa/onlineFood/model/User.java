@@ -1,6 +1,5 @@
 package com.vipusa.onlineFood.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vipusa.onlineFood.defaults.USER_ROLE;
 import jakarta.persistence.*;
@@ -27,7 +26,6 @@ public class User {
     @Column(nullable = false)
     private String lastName;
 
-//    @Email
     @Column(unique = true, nullable = false)
     private String email;
 
