@@ -8,8 +8,8 @@ const Auth = () => {
   const navigate = useNavigate();
 
   const showModal =
-    location.pathname === '/account/register' ||
-    location.pathname === '/account/login';
+    location.pathname === '/register' ||
+    location.pathname === '/login';
 
   const handleOnClose = () => {
     navigate(-1); // Go back to previous page
@@ -20,15 +20,18 @@ const Auth = () => {
       <Box
         sx={{
           width: { xs: '90%', sm: 400 },
+          maxHeight: '90vh',
+          overflowY: 'auto',
           margin: 'auto',
-          mt: '20vh',
+          mt: '5vh',
           p: 4,
           bgcolor: 'background.paper',
           borderRadius: 2,
           boxShadow: 24,
         }}
       >
-        {location.pathname === '/account/register' ? (
+
+        {location.pathname === '/register' ? (
           <RegisterForm />
         ) : (
           <LoginForm />

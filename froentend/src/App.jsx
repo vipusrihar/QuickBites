@@ -12,10 +12,7 @@ import Cart from './components/cart/Cart';
 import Profile from './components/Profile/Profile';
 import Auth from './components/auth/Auth';
 import { useDispatch, useSelector } from 'react-redux';
-import { store } from './state/store'
 import { getUser } from './state/authentication/Action';
-import RegisterForm from './components/auth/RegisterForm';
-import LoginForm from './components/auth/LoginForm';
 
 function App() {
   const dispatch = useDispatch();
@@ -41,6 +38,7 @@ function App() {
           setProfileNavOpen={setOpenSlideBar}
           profileNavBar={openSlideBar}
         />
+
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/restaurant/:id" element={<RestaurantDetails />} />
@@ -54,12 +52,15 @@ function App() {
               />
             }
           />
-          <Route path="/account/register" element={<RegisterForm />} />
-          <Route path="/account/login" element={<LoginForm/>} />
-            <Route path="/admin/restaurant" element={<Home/>} />
 
+          {/* These two routes are placeholders for the modal */}
+          <Route path="/login" element={<></>} />
+          <Route path="/register" element={<></>} />
+
+          <Route path="/admin/restaurant" element={<Home />} />
         </Routes>
 
+        {/* Auth modal is always rendered and uses path to decide when to show */}
         <Auth />
       </BrowserRouter>
     </ThemeProvider>

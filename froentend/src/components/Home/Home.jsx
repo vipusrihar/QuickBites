@@ -12,16 +12,17 @@ const Home = () => {
     const navigate = useNavigate();
 
     const restaurantState = useSelector(store => store.restaurant);
-    console.log("Restaurants array:", restaurantState.restaurants);
-    console.log("JWT: ", jwt);
+
 
     useEffect(() => {
         if (jwt) {
             dispatch(getAllRestaurants(jwt));
         }
+        console.log("Restaurants array:", restaurantState.restaurants);
+        console.log("JWT: ", jwt);
     }, [dispatch, jwt]);
 
-  
+
 
     return (
         <div>

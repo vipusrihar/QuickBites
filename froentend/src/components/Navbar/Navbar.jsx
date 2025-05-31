@@ -51,7 +51,7 @@ const Navbar = ({ isDarkMode, setIsDarkMode, setProfileNavOpen }) => {
              {user?.firstName?.[0]?.toUpperCase() || ''}
             </Avatar>
           ) : (
-            <IconButton onClick={() => navigate('/account/login')}>
+            <IconButton onClick={() => navigate('/login')}>
               <AccountCircleIcon sx={{ fontSize: "2rem" }} />
             </IconButton>
           )}

@@ -63,7 +63,7 @@ const LoginForm = () => {
 
             <Typography className='text-center pt-5'>
               Don't Have An Account?{' '}
-              <Link component="button" onClick={() => navigate('/account/register')} underline="hover">
+              <Link component="button" onClick={() => navigate('/register')} underline="hover">
                 Register
               </Link>
             </Typography>
