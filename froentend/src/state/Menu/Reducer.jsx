@@ -1,4 +1,4 @@
-import * as actionTypes from './AcctionType'
+import * as actionTypes from './ActionType'
 const initialState = {
     menuItems: [],
     loading: false,

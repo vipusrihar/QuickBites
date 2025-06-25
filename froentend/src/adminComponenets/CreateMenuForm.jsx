@@ -1,54 +1,47 @@
 import { useFormik } from 'formik';
 import React, { useState } from 'react';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
-import { Button, CircularProgress, IconButton, TextField } from '@mui/material';
+import { Button, CircularProgress, FormControl, IconButton, InputLabel, Menu, MenuItem, Select, TextField } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import Grid from '@mui/material/Grid';
 import { uploadImageToCloudinary } from './utills/uploadToCloudinary';
-import { useDispatch } from 'react-redux';
-import {createRestaurant} from '../state/restaurant/Action'
+import { useDispatch, useSelector } from 'react-redux';
+import {createMenuItem} from '../state/Menu/Action';
+
 
 const initialValues = {
   name: '',
-  city: '',
-  address: '',
   description: '',
-  postalCode: '',
   image: [],
-  mobile: '',
-  twitter: '',
-  instagram: '',
-  facebook: '',
-  openingHours: '',
+  price: '',
+  restautrantId: '',
+  foodType: '',
+  category: ''
+
 };
 
-const CreateRestaurantForm = () => {
-  const [uploadImage, setUploadImage] = useState(false);
+const CreateMenuForm = () => {
   const dispatch = useDispatch();
   const jwt = localStorage.getItem("jwt");
-
+  const {restautrant} = useSelector((store) => store);
+  const [uploadImage, setUploadImage] = useState(false);
 
   const formik = useFormik({
     initialValues,
     onSubmit: (values) => {
       const data = {
-        description: values.description,
-        city: values.city,
-        address: values.address,
-        postalCode: values.postalCode,
-        mobile: values.mobile,
         name: values.name,
+        description: values.description,
         image: values.image,
-        twitter: values.twitter,
-        instagram: values.instagram,
-        facebook: values.facebook,
-        openingHours: values.openingHours,
-        openingTime : values.openingTime,
-        closingTime : values.closingTime
+        price: values.price,
+        restautrantId: 2,
+        category: values.category,
+        foodType: values.foodType,
       };
-      console.log('data----', data);
 
-      dispatch(createRestaurant({data, token:jwt}))
+      dispatch(createMenuItem({menu:values,jwt}))
+
+      console.log('data----', data);
     },
   });
 
@@ -70,7 +63,7 @@ const CreateRestaurantForm = () => {
   return (
     <div className="py-10 px-5 lg:flex items-center justify-center min-h-screen">
       <div className="lg:max-w-4xl">
-        <h1 className="font-bold text-2xl text-center py-2">Add New Restaurant Form</h1>
+        <h1 className="font-bold text-2xl text-center py-2">Add New Menu Form</h1>
 
         <form onSubmit={formik.handleSubmit} className="space-y-4">
           <Grid container spacing={2}>
@@ -86,9 +79,8 @@ const CreateRestaurantForm = () => {
                 className='relative'
                 htmlFor='fileInput'>
                 <span
-                  className='wa-24 h-25 cursor-pointer flex items-center justify-center p-3 border rounded-md border-gray-600' >
-                  <AddPhotoAlternateIcon
-                    className='text-white' />
+                  className='w-24 h-25 cursor-pointer flex items-center justify-center p-3 border rounded-md border-gray-600' >
+                  <AddPhotoAlternateIcon />
                 </span>
                 {
                   uploadImage &&
@@ -154,105 +146,55 @@ const CreateRestaurantForm = () => {
             <Grid size={{ xs: 12, sm: 6 }}>
               <TextField
                 fullWidth
-                id="address"
-                name="address"
-                label="Address"
+                id="price"
+                name="price"
+                label="Price"
                 variant="outlined"
                 onChange={formik.handleChange}
-                value={formik.values.address}
+                value={formik.values.price}
 
               />
             </Grid>
 
-            <Grid size={{ xs: 12, sm: 6 }}>
-              <TextField
-                fullWidth
-                id="city"
-                name="city"
-                label="City"
-                variant="outlined"
-                onChange={formik.handleChange}
-                value={formik.values.city}
-
-              />
+            <Grid size={{ xs: 12, sm: 3 }}>
+              <FormControl variant="outlined">
+                <InputLabel htmlFor="outlined-category-native-simple">Category</InputLabel>
+                <Select
+                  fullWidth
+                  native
+                  name="category"
+                  value={formik.values.category}
+                  onChange={formik.handleChange}
+                  inputProps={{
+                    id: 'outlined-category-native-simple',
+                  }}
+                >
+                {restautrant.category.map((item) => <MenuItem value={item.name}>{item.name}</MenuItem>)}
+                </Select>
+              </FormControl>
             </Grid>
 
-            <Grid size={{ xs: 12, sm: 6 }}>
-              <TextField
-                fullWidth
-                id="postalCode"
-                name="postalCode"
-                label="Postal Code"
-                variant="outlined"
-                onChange={formik.handleChange} value={formik.values.postalCode} />
-            </Grid>
+            <Grid size={{ xs: 12, sm: 3 }}>
+              <FormControl variant="outlined">
+                <InputLabel htmlFor="outlined-category-native-simple">Food Type</InputLabel>
+                <Select
+                  native
+                  fullWidth
+                  name="foodType"
+                  value={formik.values.foodType}
+                  onChange={formik.handleChange}
+                  inputProps={{
+                    id: 'outlined-foodtype-native-simple',
+                  }}
+                >
+                  <option aria-label="None" value="" />
+                  <option value="VEG">VEG</option>
+                  <option value="NONVEG">NONVEG</option>
+                  <option value="DRINK">DRINK</option>
+                  <option value="SNACKS">SNACKS</option>
+                </Select>
 
-            <Grid size={{ xs: 12, sm: 6 }}>
-              <TextField
-                fullWidth
-                id="openingTime"
-                name="openingTime"
-                label="Opening Time"
-                placeholder="9:00 AM "
-                variant="outlined"
-                onChange={formik.handleChange}
-                value={formik.values.openingTime} />
-            </Grid>
-
-              <Grid size={{ xs: 12, sm: 6 }}>
-              <TextField
-                fullWidth
-                id="closingTime"
-                name="closingTime"
-                label="Closing Time"
-                placeholder="10:00 PM"
-                variant="outlined"
-                onChange={formik.handleChange}
-                value={formik.values.closingTime} />
-            </Grid>
-
-            <Grid size={{ xs: 12, sm: 6 }}>
-              <TextField
-                fullWidth
-                id="mobile"
-                name="mobile"
-                label="Phone Number"
-                variant="outlined"
-                onChange={formik.handleChange}
-                value={formik.values.mobile} />
-            </Grid>
-
-            <Grid size={{ xs: 12, sm: 6 }}>
-              <TextField
-                fullWidth
-                id="instagram"
-                name="instagram"
-                label="Instagram"
-                variant="outlined"
-                onChange={formik.handleChange}
-                value={formik.values.instagram} />
-            </Grid>
-
-            <Grid size={{ xs: 12, sm: 6 }}>
-              <TextField
-                fullWidth
-                id="twitter"
-                name="twitter"
-                label="Twitter"
-                variant="outlined"
-                onChange={formik.handleChange}
-                value={formik.values.twitter} />
-            </Grid>
-
-            <Grid size={{ xs: 12, sm: 6 }}>
-              <TextField
-                fullWidth
-                id="facebook"
-                name="facebook"
-                label="Facebook"
-                variant="outlined"
-                onChange={formik.handleChange}
-                value={formik.values.facebook} />
+              </FormControl>
             </Grid>
 
             <Grid size={{ xs: 12, sm: 6 }}>
@@ -261,7 +203,7 @@ const CreateRestaurantForm = () => {
                 variant="contained"
                 color="primary"
                 fullWidth size="large">
-                Create Restaurant
+                Create Menu
               </Button>
             </Grid>
           </Grid>
@@ -271,4 +213,4 @@ const CreateRestaurantForm = () => {
   );
 };
 
-export default CreateRestaurantForm;
+export default CreateMenuForm;

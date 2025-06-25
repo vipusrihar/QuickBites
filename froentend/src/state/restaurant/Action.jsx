@@ -155,3 +155,20 @@ export const updateRestaurantStatus = ({restaurantId, jwt}) => {
 
     }
 }
+
+
+//createCategoryAction
+
+export const createCategoryAction = () => {
+    
+}
+
+//getMenuItemsByRestaurantId
+export const getMenuItemsByRestaurantId = () => {
+
+}
+
+// getRestaurantsCategory
+export const getRestaurantsCategory = () => {
+    
+}

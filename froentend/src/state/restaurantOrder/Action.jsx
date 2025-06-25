@@ -29,7 +29,7 @@ export const updateOrderStatus = ({orderId,orderStatus,jwt}) => {
     }
 }
 
-export const fetchRestaurantOreder =({restaurantId, orderStatus,jwt}) => {
+export const fetchRestaurantOrders =({restaurantId, orderStatus,jwt}) => {
     return async (dispatch) => {
         try{
             dispatch({type: GET_RESTAURANTS_OREDER_REQUEST});

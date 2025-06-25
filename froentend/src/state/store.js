@@ -7,6 +7,7 @@ import { menuItemReducer } from './Menu/Reducer';
 import { cartReducer } from './cart/Reducer';
 import { orderReducer } from "./order/Reducer";
 import restaurantOrderReducer from "./restaurantOrder/Reducer";
+import { enumReducer } from "./enums/Reducer";
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
   cart: cartReducer,
   order: orderReducer,
   restaurantOrder: restaurantOrderReducer,
+  enum : enumReducer,
 });
 
 export const store = legacy_createStore(
