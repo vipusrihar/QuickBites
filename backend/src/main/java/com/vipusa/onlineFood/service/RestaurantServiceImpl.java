@@ -1,8 +1,6 @@
 package com.vipusa.onlineFood.service;
 
-import com.vipusa.onlineFood.model.Food;
-import com.vipusa.onlineFood.model.Restaurant;
-import com.vipusa.onlineFood.model.User;
+import com.vipusa.onlineFood.model.*;
 import com.vipusa.onlineFood.repository.FoodRepository;
 import com.vipusa.onlineFood.repository.RestaurantRepository;
 import com.vipusa.onlineFood.request.CreateRestaurantRequest;
@@ -27,12 +25,22 @@ public class RestaurantServiceImpl implements RestaurantService {
     public Restaurant createRestaurant(CreateRestaurantRequest createRestaurantRequest, User user) {
         Restaurant restaurant = new Restaurant();
         restaurant.setName(createRestaurantRequest.getName());
-        restaurant.setAddress(createRestaurantRequest.getAddress());
         restaurant.setOpeningTime(createRestaurantRequest.getOpeningTime());
         restaurant.setClosingTime(createRestaurantRequest.getClosingTime());
+        SocialMedias socialMedias = new SocialMedias();
+        socialMedias.setFacebook(createRestaurantRequest.getFacebook());
+        socialMedias.setTwitter(createRestaurantRequest.getTwitter());
+        socialMedias.setInstagram(createRestaurantRequest.getInstagram());
+        restaurant.setSocialMedias(socialMedias);
         restaurant.setType(createRestaurantRequest.getRestaurantType());
         restaurant.setPhoneNumbers(new ArrayList<>(createRestaurantRequest.getPhoneNumbers()));
         restaurant.setDescription(createRestaurantRequest.getDescription());
+        Address address = new Address();
+        address.setCity(createRestaurantRequest.getCity());
+        address.setZipCode(createRestaurantRequest.getZipCode());
+        address.setStreet(createRestaurantRequest.getAddress());
+        restaurant.setAddress(address);
+        restaurant.setImages(createRestaurantRequest.getImages());
         restaurant.setWorking(false);
         restaurant.setOwner(user);
         restaurant.setRegisteredDate(LocalDate.now());
@@ -49,12 +57,25 @@ public class RestaurantServiceImpl implements RestaurantService {
         }
 
         restaurant.setName(updateRestaurantRequest.getName());
-        restaurant.setAddress(updateRestaurantRequest.getAddress());
+        Address  newAddress = new Address();
+        newAddress.setStreet(updateRestaurantRequest.getAddress());
+        newAddress.setZipCode(updateRestaurantRequest.getZipCode());
+        newAddress.setCity(updateRestaurantRequest.getCity());
+        restaurant.setAddress(newAddress);
         restaurant.setOpeningTime(updateRestaurantRequest.getOpeningTime());
         restaurant.setClosingTime(updateRestaurantRequest.getClosingTime());
         restaurant.setType(updateRestaurantRequest.getRestaurantType());
         restaurant.setPhoneNumbers(new ArrayList<>(updateRestaurantRequest.getPhoneNumbers()));
         restaurant.setDescription(updateRestaurantRequest.getDescription());
+
+        SocialMedias socialMedias = new SocialMedias();
+        socialMedias.setFacebook(updateRestaurantRequest.getFacebook());
+        socialMedias.setTwitter(updateRestaurantRequest.getTwitter());
+        socialMedias.setInstagram(updateRestaurantRequest.getInstagram());
+        restaurant.setSocialMedias(socialMedias);
+
+        restaurant.setImages(updateRestaurantRequest.getImages());
+
 
         return restaurantRepository.save(restaurant);
     }

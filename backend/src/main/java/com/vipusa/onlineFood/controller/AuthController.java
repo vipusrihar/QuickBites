@@ -6,6 +6,7 @@ import com.vipusa.onlineFood.model.User;
 import com.vipusa.onlineFood.repository.CartRepository;
 import com.vipusa.onlineFood.repository.UserRepository;
 import com.vipusa.onlineFood.request.LoginRequest;
+import com.vipusa.onlineFood.request.SignupRequest;
 import com.vipusa.onlineFood.response.AuthResponse;
 import com.vipusa.onlineFood.service.CustomerUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 public class AuthController {
 
     @Autowired
@@ -39,23 +40,23 @@ public class AuthController {
     private CartRepository cartRepository;
 
     @PostMapping("/signup")
-    public ResponseEntity<AuthResponse> createUserHandler(@RequestBody User user) throws Exception {
+    public ResponseEntity<AuthResponse> createUserHandler(@RequestBody SignupRequest request) throws Exception {
         // Check if user already exists
-        User isUserExist = userRepository.findByEmail(user.getEmail());
+        User isUserExist = userRepository.findByEmail(request.getEmail());
         if (isUserExist != null) {
             throw new Exception("Email already exists");
         }
 
         // Create the new user
         User createdUser = new User();
-        createdUser.setEmail(user.getEmail());
-        createdUser.setFirstName(user.getFirstName());
-        createdUser.setLastName(user.getLastName());
-        createdUser.setAddresses(user.getAddresses());
-        createdUser.setRole(user.getRole());
+        createdUser.setEmail(request.getEmail());
+        createdUser.setFirstName(request.getFirstName());
+        createdUser.setLastName(request.getLastName());
+        createdUser.setAddresses(request.getAddresses());
+        createdUser.setRole(request.getRole());
 
         // Encode the password before setting it
-        createdUser.setPassword(passwordEncoder.encode(user.getPassword()));
+        createdUser.setPassword(passwordEncoder.encode(request.getPassword()));
 
         // Save the user to the database
         User savedUser = userRepository.save(createdUser);
@@ -68,7 +69,7 @@ public class AuthController {
 
         // Authenticate the user using the encoded password
         Authentication authentication = new UsernamePasswordAuthenticationToken(
-                savedUser.getEmail(), user.getPassword() // Plain password passed here
+                savedUser.getEmail(), request.getPassword() // Plain password passed here
         );
 
         // This won't work if you try to authenticate with the plain password
@@ -90,9 +91,9 @@ public class AuthController {
 
 
     @PostMapping("/signin")
-    public ResponseEntity<AuthResponse> signIn(@RequestBody LoginRequest loginRequest) throws Exception {
-        User user = userRepository.findByEmail(loginRequest.getEmail());
-        if (user == null || !passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
+    public ResponseEntity<AuthResponse> signIn(@RequestBody LoginRequest request) throws Exception {
+        User user = userRepository.findByEmail(request.getEmail());
+        if (user == null || !passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new Exception("Invalid email or password");
         }
 

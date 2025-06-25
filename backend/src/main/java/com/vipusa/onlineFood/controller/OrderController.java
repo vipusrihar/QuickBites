@@ -1,12 +1,17 @@
 package com.vipusa.onlineFood.controller;
 
 import com.vipusa.onlineFood.model.Order;
+import com.vipusa.onlineFood.model.User;
 import com.vipusa.onlineFood.request.OrderRequest;
+import com.vipusa.onlineFood.response.PaymentResponse;
 import com.vipusa.onlineFood.service.FoodService;
 import com.vipusa.onlineFood.service.OrderService;
+import com.vipusa.onlineFood.service.PaymentService;
 import com.vipusa.onlineFood.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +24,9 @@ public class OrderController {
     private OrderService orderService;
 
     @Autowired
+    private PaymentService paymentService;
+
+    @Autowired
     private UserService userService;
 
     @Autowired
@@ -26,10 +34,13 @@ public class OrderController {
 
     //Create order
     @PostMapping("")
-    public ResponseEntity<Order> createOrder(@RequestBody OrderRequest orderRequest) {
+    public ResponseEntity<PaymentResponse> createOrder(@RequestBody OrderRequest orderRequest,
+                                                       @RequestHeader("Authorization") String jwt) {
         try {
-            Order order = orderService.createOrder(orderRequest);
-            return ResponseEntity.ok(order);
+            User user = userService.findUserByJwtToken(jwt);
+            Order order = orderService.createOrder(orderRequest,user);
+            PaymentResponse response = paymentService.createPaymentLink(order);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
@@ -47,9 +58,10 @@ public class OrderController {
     }
 
     //Get orders by user
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Order>> getOrdersByUser(@PathVariable Long userId) {
-        return ResponseEntity.ok(orderService.findOrdersByUser(userId));
+    @GetMapping("/user")
+    public ResponseEntity<List<Order>> getOrdersByUser(@RequestHeader("Authorization") String jwt) throws Exception {
+        User user = userService.findUserByJwtToken(jwt);
+        return ResponseEntity.ok(orderService.findOrdersByUser(user.getId()));
     }
 
     //Get orders by restaurant

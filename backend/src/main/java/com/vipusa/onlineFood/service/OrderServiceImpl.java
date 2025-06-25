@@ -33,9 +33,9 @@ public class OrderServiceImpl implements OrderService{
     private FoodOrderRepository foodOrderRepository;
 
     @Override
-    public Order createOrder(OrderRequest orderRequest) throws Exception {
+    public Order createOrder(OrderRequest orderRequest, User user) throws Exception {
         Order foodOrder = new Order();
-        User user = userRepository.findById(orderRequest.getUserId()).orElseThrow( () -> new Exception("User Not Found"));
+
         foodOrder.setUser(user);
 
         Restaurant restaurant = restaurantRepository.findById(orderRequest.getRestaurantId()).orElseThrow( () -> new Exception("Restaurant Not Found"));

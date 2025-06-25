@@ -6,6 +6,8 @@ import com.vipusa.onlineFood.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserServiceImp implements UserService{
 
@@ -31,5 +33,10 @@ public class UserServiceImp implements UserService{
             throw new  Exception("User Not Found");
         }
         return user;
+    }
+
+    @Override
+    public List<User> findAll() {
+        return userRepository.findAll();
     }
 }

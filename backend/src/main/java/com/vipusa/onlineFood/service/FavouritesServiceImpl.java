@@ -53,8 +53,7 @@ public class FavouritesServiceImpl implements FavouritesService {
         } else {
             throw new RuntimeException("Restaurant already in favourites");
         }
-
-        System.out.println("xasdxa");
+        
     }
 
 }

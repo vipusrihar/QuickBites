@@ -40,34 +40,47 @@ public class FoodController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Food> findFoodById(@RequestHeader("Authorize") String jwt,
-                                             @PathVariable("id") Long foodId) throws Exception{
+    public ResponseEntity<Food> findFoodById(@RequestHeader("Authorization") String jwt,
+                                             @PathVariable("id") Long foodId) throws Exception {
         User user = userService.findUserByJwtToken(jwt);
         Food food = foodService.findFoodById(foodId);
-        return new ResponseEntity<>(food,HttpStatus.OK);
+        return new ResponseEntity<>(food, HttpStatus.OK);
     }
 
     @DeleteMapping("/{resId}/{foodId}")
-    public ResponseEntity<MessageResponse> deleteFood(@RequestHeader("Authorize") String jwt,
+    public ResponseEntity<MessageResponse> deleteFood(@RequestHeader("Authorization") String jwt,
                                                       @PathVariable("resId") Long restaurantId,
-                                                      @PathVariable("foodId") Long foodId) throws Exception{
+                                                      @PathVariable("foodId") Long foodId) throws Exception {
         User user = userService.findUserByJwtToken(jwt);
         Restaurant restaurant = restaurantService.findRestaurantById(restaurantId);
         Food food = foodService.findFoodById(foodId);
+
+        if (!food.getRestaurant().getId().equals(restaurantId)) {
+            throw new Exception("This food does not belong to the specified restaurant");
+        }
+
         foodService.deleteFood(foodId);
 
         MessageResponse messageResponse = new MessageResponse();
-        messageResponse.setMessage("Successfully deleted Food With foodId "+ foodId);
+        messageResponse.setMessage("Successfully deleted Food With foodId " + foodId);
 
-        return new ResponseEntity<>(messageResponse,HttpStatus.OK);
-
+        return new ResponseEntity<>(messageResponse, HttpStatus.OK);
     }
+
 
     @GetMapping("getFoods/{restaurantID}")
     public ResponseEntity<List<Food>> getRestaurantsFood(@RequestHeader("Authorization") String jwt,
                                                          @PathVariable("restaurantID") Long restaurantID) throws Exception{
         User user = userService.findUserByJwtToken(jwt);
         List<Food> foodList = foodService.getRestaurantsFood(restaurantID);
+        return new ResponseEntity<>(foodList,HttpStatus.OK);
+    }
+
+
+    @GetMapping("getAllFoods")
+    public ResponseEntity<List<Food>> getAllFoods(@RequestHeader("Authorization") String jwt) throws Exception{
+        User user = userService.findUserByJwtToken(jwt);
+        List<Food> foodList = foodService.getAllFoods();
         return new ResponseEntity<>(foodList,HttpStatus.OK);
     }
 

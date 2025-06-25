@@ -1,5 +1,6 @@
 package com.vipusa.onlineFood.service;
 
+import com.vipusa.onlineFood.defaults.FOOD_TYPE;
 import com.vipusa.onlineFood.model.Food;
 import com.vipusa.onlineFood.model.Restaurant;
 import com.vipusa.onlineFood.repository.FoodRepository;
@@ -32,6 +33,7 @@ public class FoodServiceImpl implements FoodService{
         food.setDescription(foodRequest.getDescription());
         food.setAvailable(false);
         food.setRestaurant(restaurant);
+        food.setImagePath(foodRequest.getImage());
         food.setFoodType(foodRequest.getFoodType());
         food.setCategory(foodRequest.getCategory());
 
@@ -41,12 +43,15 @@ public class FoodServiceImpl implements FoodService{
 
     @Override
     public void deleteFood(Long foodId) throws Exception {
+
         Food food = findFoodById(foodId);
         if(food == null){
             throw new Exception("Food not find With this Id");
         }
         foodRepository.deleteById(foodId);
     }
+
+
 
     @Override
     public List<Food> getRestaurantsFood(Long restaurantId) throws Exception {
@@ -82,7 +87,7 @@ public class FoodServiceImpl implements FoodService{
         List<Food> foodList = foodRepository.findAll();
         List<Food> filteredList = new ArrayList<>();
         for(Food food : foodList){
-            if(food.getFoodType().equals("VEG")) {
+            if(food.getFoodType().equals(FOOD_TYPE.VEG)) {
                 filteredList.add(food);
             }
         }
@@ -94,10 +99,15 @@ public class FoodServiceImpl implements FoodService{
         List<Food> foodList = foodRepository.findAll();
         List<Food> filteredList = new ArrayList<>();
         for(Food food : foodList){
-            if(food.getFoodType().equals("NONVEG")) {
+            if(food.getFoodType().equals(FOOD_TYPE.NONVEG)) {
                 filteredList.add(food);
             }
         }
         return filteredList;
+    }
+
+    @Override
+    public List<Food> getAllFoods() {
+        return foodRepository.findAll();
     }
 }

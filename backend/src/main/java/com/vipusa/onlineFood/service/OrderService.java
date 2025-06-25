@@ -1,6 +1,7 @@
 package com.vipusa.onlineFood.service;
 
 import com.vipusa.onlineFood.model.Order;
+import com.vipusa.onlineFood.model.User;
 import com.vipusa.onlineFood.request.OrderRequest;
 
 import java.util.List;
@@ -8,7 +9,7 @@ import java.util.List;
 
 public interface OrderService {
 
-    public Order createOrder(OrderRequest orderRequest) throws Exception;
+    public Order createOrder(OrderRequest orderRequest, User user) throws Exception;
 
     public void deleteOrder(Long orderID) throws Exception;
 

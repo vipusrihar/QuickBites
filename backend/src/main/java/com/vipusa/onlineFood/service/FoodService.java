@@ -24,4 +24,6 @@ public interface FoodService{
     public List<Food> filterByVegetarian();
 
     public List<Food> filterByNonVegetarian();
+
+    public List<Food> getAllFoods();
 }

@@ -31,7 +31,7 @@ public class Restaurant {
     private String name;
 
     @Column(nullable = false)
-    private String address;
+    private Address address;
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
@@ -68,4 +68,15 @@ public class Restaurant {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private RESTAURANT_STATUS status = RESTAURANT_STATUS.PENDING;
+
+
+    @ElementCollection
+    @CollectionTable(name = "restaurant_images", joinColumns = @JoinColumn(name = "restaurant_id"))
+    @Column(name = "image")
+    private List<String> images = new ArrayList<>();
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "social_media_id")
+    private SocialMedias socialMedias;
+
 }

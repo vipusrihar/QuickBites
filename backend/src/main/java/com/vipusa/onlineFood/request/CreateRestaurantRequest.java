@@ -11,10 +11,17 @@ import java.util.List;
 @Setter
 public class CreateRestaurantRequest {
     private String name;
+    private String city;
     private String address;
+    private String description;
     private RESTAURANT_TYPE restaurantType;
     private LocalTime openingTime;
     private LocalTime closingTime;
     private List<String> phoneNumbers;
-    private String description;
+    private String instagram;
+    private String facebook;
+    private String twitter;
+    private String zipCode;
+    private List<String> images;
+
 }

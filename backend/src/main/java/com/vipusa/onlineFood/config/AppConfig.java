@@ -25,7 +25,7 @@ public class AppConfig {
                 .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize ->
                         authorize
-                                .requestMatchers("/auth/signup", "/auth/signin").permitAll()  // Allow public access
+                                .requestMatchers("/api/auth/signup", "/api/auth/signin").permitAll()  // Allow public access
                                 .requestMatchers("/api/admin/**").hasAnyRole("RESTAURANT", "ADMIN")
                                 .requestMatchers("/api/**").authenticated()  // Require authentication for other API endpoints
                                 .anyRequest().permitAll()
