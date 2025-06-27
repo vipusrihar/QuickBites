@@ -24,10 +24,9 @@ public class RestaurantController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("")
+    @PostMapping("/")
     public ResponseEntity<Restaurant> createRestaurant (@RequestBody CreateRestaurantRequest createRestaurantRequest,
                                                         @RequestHeader("Authorization") String jwt) throws Exception{
-
 
         User user = userService.findUserByJwtToken(jwt);
 
@@ -42,9 +41,16 @@ public class RestaurantController {
     public ResponseEntity<Restaurant> getRestaurantById(
             @PathVariable Long id,
             @RequestHeader("Authorization") String jwt) throws Exception {
-
-        userService.findUserByJwtToken(jwt); // validate token
+        userService.findUserByJwtToken(jwt);
         Restaurant restaurant = restaurantService.findRestaurantById(id);
+        return ResponseEntity.ok(restaurant);
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<Restaurant> getRestaurantByUserId
+            (@RequestHeader("Authorization") String jwt) throws Exception{
+        User user = userService.findUserByJwtToken(jwt);
+        Restaurant restaurant = restaurantService.findRestaurantByUserId(user.getId());
         return ResponseEntity.ok(restaurant);
     }
 
@@ -81,8 +87,7 @@ public class RestaurantController {
     }
 
     @GetMapping("/allRest")
-    public ResponseEntity<List<Restaurant>> getAllRestaurants (@RequestHeader("Authorization") String jwt)
-                                                                throws Exception{
+    public ResponseEntity<List<Restaurant>> getAllRestaurants () {
         List<Restaurant> restaurantList = restaurantService.getAllRestaurants();
         return new ResponseEntity<>(restaurantList,HttpStatus.OK);
     }
@@ -97,19 +102,12 @@ public class RestaurantController {
         return new ResponseEntity<>(restaurantList, HttpStatus.OK);
     }
 
-//
-//    @PutMapping("/{id}/addFood")
-//    public ResponseEntity<?> addFood(@RequestHeader("Authorization") String jwt,
-//                                              @PathVariable Long id,
-//                                              @RequestBody Food food) throws Exception{
-//        User user = userService.findUserByJwtToken(jwt);
-//        Restaurant restaurant = restaurantService.findRestaurantById(id);
-//        restaurantService.addFood(id,food);
-//
-//        MessageResponse messageResponse = new MessageResponse();
-//        messageResponse.setMessage(food.getName() + " added to " + user.getFirstName() +restaurant.getName());
-//
-//        return new ResponseEntity<>(messageResponse,HttpStatus.OK);
-//
-//    }
+    @GetMapping("/categories/{id}")
+    public ResponseEntity<List<String>> getCategories(@RequestHeader("Authorization") String jwt,
+                                                      @PathVariable Long id) throws Exception{
+        User user = userService.findUserByJwtToken(jwt);
+        List<String> categories = restaurantService.getFoodCategories(id);
+        return new ResponseEntity<>(categories,HttpStatus.OK);
+    }
+
 }

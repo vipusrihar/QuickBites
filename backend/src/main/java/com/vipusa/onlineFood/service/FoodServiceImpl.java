@@ -9,12 +9,13 @@ import com.vipusa.onlineFood.repository.UserRepository;
 import com.vipusa.onlineFood.request.FoodRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
-public class FoodServiceImpl implements FoodService{
+public class FoodServiceImpl implements FoodService {
 
     @Autowired
     private FoodRepository foodRepository;
@@ -26,53 +27,58 @@ public class FoodServiceImpl implements FoodService{
     private RestaurantRepository restaurantRepository;
 
     @Override
-    public Food createFood(FoodRequest foodRequest, Restaurant restaurant) {
-        Food food = new Food();
-        food.setName(foodRequest.getName());
-        food.setPrice(foodRequest.getPrice());
-        food.setDescription(foodRequest.getDescription());
-        food.setAvailable(false);
-        food.setRestaurant(restaurant);
-        food.setImagePath(foodRequest.getImage());
-        food.setFoodType(foodRequest.getFoodType());
-        food.setCategory(foodRequest.getCategory());
+    @Transactional
+    public Food createFood(FoodRequest foodRequest, Long restaurantId) {
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new RuntimeException("Restaurant not found with ID: " + restaurantId));
 
-        Food saveFood = foodRepository.save(food);
-        return saveFood;
+        String requestedCategory = foodRequest.getCategory();
+        if (requestedCategory == null || requestedCategory.isBlank()) {
+            throw new RuntimeException("Food category must not be empty.");
+        }
+
+        String normalizedCategory = requestedCategory.toLowerCase();
+        if (!restaurant.getFoodCategories().contains(normalizedCategory)) {
+            throw new RuntimeException("Food category '" + normalizedCategory + "' is not supported by this restaurant.");
+        }
+
+        Food food = Food.builder()
+                .name(foodRequest.getName())
+                .price(foodRequest.getPrice())
+                .description(foodRequest.getDescription())
+                .available(false)
+                .restaurant(restaurant)
+                .imagePath(foodRequest.getImage())
+                .foodType(foodRequest.getFoodType())
+                .category(normalizedCategory)
+                .build();
+
+        return foodRepository.save(food);
     }
+
 
     @Override
     public void deleteFood(Long foodId) throws Exception {
-
         Food food = findFoodById(foodId);
-        if(food == null){
-            throw new Exception("Food not find With this Id");
-        }
-        foodRepository.deleteById(foodId);
+        foodRepository.deleteById(food.getId());
     }
-
-
 
     @Override
     public List<Food> getRestaurantsFood(Long restaurantId) throws Exception {
-        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+        restaurantRepository.findById(restaurantId)
                 .orElseThrow(() -> new Exception("Restaurant not found with ID: " + restaurantId));
-
-        List<Food> foodList = foodRepository.findByRestaurantId(restaurantId);
-        return foodList;
-
+        return foodRepository.findByRestaurantId(restaurantId);
     }
 
     @Override
     public List<Food> searchFood(String keyword) {
-        List<Food> foodList = foodRepository.findBySearchQuery(keyword);
-        return foodList;
+        return foodRepository.findBySearchQuery(keyword);
     }
 
     @Override
-    public Food findFoodById(Long foodId) throws Exception   {
-        Food food = foodRepository.findById(foodId).orElseThrow(() -> new Exception("Food Not Found")) ;
-        return food;
+    public Food findFoodById(Long foodId) throws Exception {
+        return foodRepository.findById(foodId)
+                .orElseThrow(() -> new Exception("Food not found with ID: " + foodId));
     }
 
     @Override
@@ -83,27 +89,19 @@ public class FoodServiceImpl implements FoodService{
     }
 
     @Override
-    public List<Food> filterByVegetarian(){
-        List<Food> foodList = foodRepository.findAll();
-        List<Food> filteredList = new ArrayList<>();
-        for(Food food : foodList){
-            if(food.getFoodType().equals(FOOD_TYPE.VEG)) {
-                filteredList.add(food);
-            }
-        }
-        return filteredList;
+    public List<Food> filterByVegetarian() {
+        return filterFoodByType(FOOD_TYPE.VEG);
     }
 
     @Override
-    public List<Food> filterByNonVegetarian(){
-        List<Food> foodList = foodRepository.findAll();
-        List<Food> filteredList = new ArrayList<>();
-        for(Food food : foodList){
-            if(food.getFoodType().equals(FOOD_TYPE.NONVEG)) {
-                filteredList.add(food);
-            }
-        }
-        return filteredList;
+    public List<Food> filterByNonVegetarian() {
+        return filterFoodByType(FOOD_TYPE.NONVEG);
+    }
+
+    private List<Food> filterFoodByType(FOOD_TYPE type) {
+        return foodRepository.findAll().stream()
+                .filter(food -> food.getFoodType().equals(type))
+                .collect(Collectors.toList());
     }
 
     @Override

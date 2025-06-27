@@ -1,13 +1,9 @@
 package com.vipusa.onlineFood.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.vipusa.onlineFood.defaults.FOOD_CATEGORY;
 import com.vipusa.onlineFood.defaults.FOOD_TYPE;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.antlr.v4.runtime.misc.NotNull;
 
 @Entity
@@ -16,6 +12,7 @@ import org.antlr.v4.runtime.misc.NotNull;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Food {
 
     @Id
@@ -39,14 +36,12 @@ public class Food {
     @Column(nullable = false)
     private boolean available = true;
 
-
     @NotNull
     @Column(nullable = false)
     private String imagePath;
 
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private FOOD_CATEGORY category;
+    private String category;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

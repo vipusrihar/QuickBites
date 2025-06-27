@@ -1,10 +1,12 @@
 package com.vipusa.onlineFood.controller;
 
+import com.vipusa.onlineFood.defaults.FOOD_TYPE;
 import com.vipusa.onlineFood.model.Food;
 import com.vipusa.onlineFood.model.Restaurant;
 import com.vipusa.onlineFood.model.User;
 import com.vipusa.onlineFood.request.FoodRequest;
 import com.vipusa.onlineFood.response.MessageResponse;
+import com.vipusa.onlineFood.service.EnumService;
 import com.vipusa.onlineFood.service.FoodService;
 import com.vipusa.onlineFood.service.RestaurantService;
 import com.vipusa.onlineFood.service.UserService;
@@ -28,13 +30,15 @@ public class FoodController {
     @Autowired
     private FoodService foodService;
 
+    @Autowired
+    private EnumService enumService;
+
     @PostMapping("/{resId}")
     public ResponseEntity<Food> createFood(@RequestBody FoodRequest foodRequest,
                                            @RequestHeader("Authorization") String jwt,
                                            @PathVariable("resId") Long restaurantId) throws Exception{
         User user = userService.findUserByJwtToken(jwt);
-        Restaurant restaurant = restaurantService.findRestaurantById(restaurantId);
-        Food food = foodService.createFood(foodRequest,restaurant);
+        Food food = foodService.createFood(foodRequest,restaurantId);
 
         return new ResponseEntity<>(food, HttpStatus.CREATED);
     }
@@ -113,5 +117,11 @@ public class FoodController {
         List<Food> foodsList = foodService.searchFood(name);
         return new ResponseEntity<>(foodsList,HttpStatus.OK);
     }
+
+//    @GetMapping("{resId}/foodTypes")
+//    public ResponseEntity<List<String>> getAllFoodTypes(@RequestHeader("Authorization") String jwt, @PathVariable("resId") Long id){
+//        List<String> allFoodTypes = enumService.getAllFoodTypes();
+//        return new  ResponseEntity<>(allFoodTypes,HttpStatus.OK);
+//    }
 
 }

@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface FoodService{
 
-    public Food createFood(FoodRequest foodRequest, Restaurant restaurant);
+    public Food createFood(FoodRequest foodRequest, Long restaurantId);
 
     public void deleteFood(Long foodId) throws Exception;
 
@@ -26,4 +26,5 @@ public interface FoodService{
     public List<Food> filterByNonVegetarian();
 
     public List<Food> getAllFoods();
+
 }

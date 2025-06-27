@@ -6,6 +6,7 @@ import com.vipusa.onlineFood.repository.RestaurantRepository;
 import com.vipusa.onlineFood.request.CreateRestaurantRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -14,33 +15,18 @@ import java.util.List;
 @Service
 public class RestaurantServiceImpl implements RestaurantService {
 
+    private static final String RESTAURANT_NOT_FOUND = "Restaurant not found with ID: ";
+
     @Autowired
     private RestaurantRepository restaurantRepository;
 
     @Autowired
     private FoodRepository foodRepository;
 
-
     @Override
-    public Restaurant createRestaurant(CreateRestaurantRequest createRestaurantRequest, User user) {
-        Restaurant restaurant = new Restaurant();
-        restaurant.setName(createRestaurantRequest.getName());
-        restaurant.setOpeningTime(createRestaurantRequest.getOpeningTime());
-        restaurant.setClosingTime(createRestaurantRequest.getClosingTime());
-        SocialMedias socialMedias = new SocialMedias();
-        socialMedias.setFacebook(createRestaurantRequest.getFacebook());
-        socialMedias.setTwitter(createRestaurantRequest.getTwitter());
-        socialMedias.setInstagram(createRestaurantRequest.getInstagram());
-        restaurant.setSocialMedias(socialMedias);
-        restaurant.setType(createRestaurantRequest.getRestaurantType());
-        restaurant.setPhoneNumbers(new ArrayList<>(createRestaurantRequest.getPhoneNumbers()));
-        restaurant.setDescription(createRestaurantRequest.getDescription());
-        Address address = new Address();
-        address.setCity(createRestaurantRequest.getCity());
-        address.setZipCode(createRestaurantRequest.getZipCode());
-        address.setStreet(createRestaurantRequest.getAddress());
-        restaurant.setAddress(address);
-        restaurant.setImages(createRestaurantRequest.getImages());
+    @Transactional
+    public Restaurant createRestaurant(CreateRestaurantRequest request, User user) {
+        Restaurant restaurant = buildRestaurantFromRequest(request);
         restaurant.setWorking(false);
         restaurant.setOwner(user);
         restaurant.setRegisteredDate(LocalDate.now());
@@ -49,40 +35,17 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
-    public Restaurant updateRestaurant(Long restaurantId, CreateRestaurantRequest updateRestaurantRequest) throws Exception {
+    public Restaurant updateRestaurant(Long restaurantId, CreateRestaurantRequest request) throws Exception {
         Restaurant restaurant = findRestaurantById(restaurantId);
 
-        if(restaurant == null){
-            throw new Exception("Restaurant not find with id "+restaurantId);
-        }
-
-        restaurant.setName(updateRestaurantRequest.getName());
-        Address  newAddress = new Address();
-        newAddress.setStreet(updateRestaurantRequest.getAddress());
-        newAddress.setZipCode(updateRestaurantRequest.getZipCode());
-        newAddress.setCity(updateRestaurantRequest.getCity());
-        restaurant.setAddress(newAddress);
-        restaurant.setOpeningTime(updateRestaurantRequest.getOpeningTime());
-        restaurant.setClosingTime(updateRestaurantRequest.getClosingTime());
-        restaurant.setType(updateRestaurantRequest.getRestaurantType());
-        restaurant.setPhoneNumbers(new ArrayList<>(updateRestaurantRequest.getPhoneNumbers()));
-        restaurant.setDescription(updateRestaurantRequest.getDescription());
-
-        SocialMedias socialMedias = new SocialMedias();
-        socialMedias.setFacebook(updateRestaurantRequest.getFacebook());
-        socialMedias.setTwitter(updateRestaurantRequest.getTwitter());
-        socialMedias.setInstagram(updateRestaurantRequest.getInstagram());
-        restaurant.setSocialMedias(socialMedias);
-
-        restaurant.setImages(updateRestaurantRequest.getImages());
-
+        updateRestaurantFromRequest(restaurant, request);
 
         return restaurantRepository.save(restaurant);
     }
 
     @Override
     public void deleteRestaurant(Long restaurantId) throws Exception {
-        Restaurant restaurant = findRestaurantById(restaurantId);
+        findRestaurantById(restaurantId); // Ensure it exists
         restaurantRepository.deleteById(restaurantId);
     }
 
@@ -99,12 +62,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Override
     public Restaurant findRestaurantById(Long restaurantId) throws Exception {
         return restaurantRepository.findById(restaurantId)
-                .orElseThrow(() -> new Exception("Restaurant not found with ID: " + restaurantId));
-    }
-
-    @Override
-    public List<Restaurant> getRestaurantByOwnerId(Long userId) {
-        return restaurantRepository.findByOwnerId(userId);
+                .orElseThrow(() -> new Exception(RESTAURANT_NOT_FOUND + restaurantId));
     }
 
     @Override
@@ -115,44 +73,94 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
-    public void addFood(Long restaurantId, Food food) throws Exception {
+    public boolean addFoodCategories(String category, Long restaurantId) throws Exception {
         Restaurant restaurant = findRestaurantById(restaurantId);
+        String normalizedCategory = category.toLowerCase();
+        List<String> foodCategories = restaurant.getFoodCategories();
 
-        // Ensure food list is initialized
-        if (restaurant.getMenuItems() == null) {
-            restaurant.setMenuItems(new ArrayList<>());
+        if (!foodCategories.contains(normalizedCategory)) {
+            foodCategories.add(normalizedCategory);
+            restaurant.setFoodCategories(foodCategories);
+            restaurantRepository.save(restaurant);
+            return true;
         }
-
-        // Associate the food with the restaurant
-        food.setRestaurant(restaurant);
-        restaurant.getMenuItems().add(food);
-
-        // Save updated restaurant
-        restaurantRepository.save(restaurant);
+        return false;
     }
-
 
     @Override
-    public void deleteFood(Long restaurantId, Long foodId) throws Exception {
+    public List<String> getFoodCategories(Long restaurantId) throws Exception {
         Restaurant restaurant = findRestaurantById(restaurantId);
-
-        Food foodToDelete = null;
-        for (Food food : restaurant.getMenuItems()) {
-            if (food.getId().equals(foodId)) {
-                foodToDelete = food;
-                break;
-            }
-        }
-
-        if (foodToDelete == null) {
-            throw new Exception("Food item not found with id: " + foodId + " in restaurant id: " + restaurantId);
-        }
-
-        restaurant.getMenuItems().remove(foodToDelete);
-
-        foodRepository.deleteById(foodId);
-
-        restaurantRepository.save(restaurant);
+        List<String> foodCategories = restaurant.getFoodCategories();
+        return foodCategories;
     }
 
+    @Override
+    public boolean deleteFoodCategories(String category, Long restaurantId) throws Exception {
+        Restaurant restaurant = findRestaurantById(restaurantId);
+        String normalizedCategory = category.toLowerCase();
+        List<String> foodCategories = restaurant.getFoodCategories();
+
+        if (foodCategories.contains(normalizedCategory)) {
+            foodCategories.remove(normalizedCategory);
+            restaurant.setFoodCategories(foodCategories);
+            restaurantRepository.save(restaurant);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public Restaurant findRestaurantByUserId(Long userId) throws Exception {
+        return restaurantRepository.findByOwnerId(userId)
+                .orElseThrow(() -> new Exception(RESTAURANT_NOT_FOUND + userId));
+    }
+
+    // ----------------------------------
+    // Helper Methods
+    // ----------------------------------
+
+    private Restaurant buildRestaurantFromRequest(CreateRestaurantRequest request) {
+        Restaurant restaurant = new Restaurant();
+
+        restaurant.setName(request.getName());
+        restaurant.setOpeningTime(request.getOpeningTime());
+        restaurant.setClosingTime(request.getClosingTime());
+        restaurant.setType(request.getRestaurantType());
+        restaurant.setPhoneNumbers(new ArrayList<>(request.getPhoneNumbers()));
+        restaurant.setDescription(request.getDescription());
+        restaurant.setImages(request.getImages());
+
+        restaurant.setAddress(buildAddressFromRequest(request));
+        restaurant.setSocialMedias(buildSocialMediasFromRequest(request));
+
+        return restaurant;
+    }
+
+    private void updateRestaurantFromRequest(Restaurant restaurant, CreateRestaurantRequest request) {
+        restaurant.setName(request.getName());
+        restaurant.setOpeningTime(request.getOpeningTime());
+        restaurant.setClosingTime(request.getClosingTime());
+        restaurant.setType(request.getRestaurantType());
+        restaurant.setPhoneNumbers(new ArrayList<>(request.getPhoneNumbers()));
+        restaurant.setDescription(request.getDescription());
+        restaurant.setImages(request.getImages());
+        restaurant.setAddress(buildAddressFromRequest(request));
+        restaurant.setSocialMedias(buildSocialMediasFromRequest(request));
+    }
+
+    private Address buildAddressFromRequest(CreateRestaurantRequest request) {
+        Address address = new Address();
+        address.setStreet(request.getAddress());
+        address.setZipCode(request.getZipCode());
+        address.setCity(request.getCity());
+        return address;
+    }
+
+    private SocialMedias buildSocialMediasFromRequest(CreateRestaurantRequest request) {
+        SocialMedias socialMedias = new SocialMedias();
+        socialMedias.setFacebook(request.getFacebook());
+        socialMedias.setTwitter(request.getTwitter());
+        socialMedias.setInstagram(request.getInstagram());
+        return socialMedias;
+    }
 }

@@ -6,13 +6,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
 
 
     List<Restaurant> findAll();
 
-    List<Restaurant> findByOwnerId(Long userId);
+    Optional<Restaurant> findByOwnerId(Long userId);
 
     @Query("SELECT r FROM Restaurant r WHERE " +
             "(:query IS NULL OR LOWER(r.name) LIKE LOWER(CONCAT('%', :query, '%')) " +

@@ -21,8 +21,4 @@ public class EnumController {
         return ResponseEntity.ok(enumService.getAllFoodTypes());
     }
 
-    @GetMapping("/food-categories")
-    public ResponseEntity<List<String>> getFoodCategories() {
-        return ResponseEntity.ok(enumService.getAllFoodCategories());
-    }
 }

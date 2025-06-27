@@ -79,4 +79,9 @@ public class Restaurant {
     @JoinColumn(name = "social_media_id")
     private SocialMedias socialMedias;
 
+    @ElementCollection
+    @CollectionTable(name = "restaurant_categories", joinColumns = @JoinColumn(name = "restaurant_id"))
+    @Column(name = "category")
+    private List<String> foodCategories = new ArrayList<>();
+
 }
