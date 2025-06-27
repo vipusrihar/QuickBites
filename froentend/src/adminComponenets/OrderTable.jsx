@@ -1,6 +1,6 @@
 import { Box, Button, Card, CardHeader, Menu, MenuItem, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
 import React, { useEffect, useState } from 'react'
-import { useDispatch, useStore } from 'react-redux'
+import { useDispatch, useSelector, useStore } from 'react-redux'
 import { fetchRestaurantOrders, updateOrderStatus } from '../state/restaurantOrder/Action';
 
 const orderStatus = [
@@ -14,29 +14,36 @@ const OrderTable = () => {
 
     const dispatch = useDispatch();
     const jwt = localStorage.getItem("jwt");
-    const { restaurant, restaurantOrders } = useStore((store))
+    const restaurant = useSelector((store) => store.restaurant);
+    const restaurantOrders = useSelector((store) => store.restaurantOrders);
 
     useEffect(() => {
         dispatch(fetchRestaurantOrders({ jwt, restaurantId: restaurant.usersRestaurant?.id }))
 
     }, []);
 
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
-    const handleUpdateOrder = (orderId, orderStatus, jwt) =>{
-        dispatch(updateOrderStatus({orderId,orderStatus,jwt}))
-        handleClose();
 
-    }
 
     const [anchorEl, setAnchorEl] = useState(null);
+    const [selectedOrderId, setSelectedOrderId] = useState(null);
 
-    const handleClick = (event) => {
+
+    const handleClick = (event, orderId) => {
         setAnchorEl(event.currentTarget);
+        setSelectedOrderId(orderId);
     };
 
-    
+    const handleUpdateOrder = (orderId, orderStatus, jwt) => {
+        dispatch(updateOrderStatus({ orderId, orderStatus, jwt }));
+        handleClose();
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+        setSelectedOrderId(null);
+    };
+
+
 
     return (
         <div className='px-2'>
@@ -58,7 +65,7 @@ const OrderTable = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {restaurantOrders.orders.map((item) => (
+                            {restaurantOrders?.order?.map((item) => (
                                 <TableRow
                                     key={item.id}
                                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -68,26 +75,34 @@ const OrderTable = () => {
                                     </TableCell>
                                     <TableCell align="right">{item.customer?.firstName}</TableCell>
                                     <TableCell align="right">
-                                        {item.items.map((orderItem) => <p>{orderItem.food?.name}</p>)}
+                                        {item.items.map((orderItem, index) => (
+                                            <p key={index}>{orderItem.food?.name}</p>
+                                        ))}
+
                                     </TableCell>
                                     <TableCell align="right">{item.total}</TableCell>
                                     <TableCell align="right">{item.orderStatus}</TableCell>
                                     <TableCell align="right">
-                                        <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
+                                        <Button aria-controls="simple-menu" aria-haspopup="true" onClick={(e) => handleClick(e, item.id)}>
                                             Update
                                         </Button>
-                                        <Menu
-                                            id="simple-menu"
-                                            anchorEl={anchorEl}
-                                            keepMounted
-                                            open={Boolean(anchorEl)}
-                                            onClose={handleClose}
-                                        >
-                                        {orderStatus.map((status) => {
-                                             <MenuItem onClick={() => handleUpdateOrder(item.id, status.value,jwt)}>{item.label}</MenuItem>
-                                        })}
-                                           
-                                        </Menu>
+
+                                        {selectedOrderId === item.id && (
+                                            <Menu
+                                                id="simple-menu"
+                                                anchorEl={anchorEl}
+                                                keepMounted
+                                                open={Boolean(anchorEl)}
+                                                onClose={handleClose}
+                                            >
+                                                {orderStatus.map((status) => (
+                                                    <MenuItem key={status.value} onClick={() => handleUpdateOrder(item.id, status.value, jwt)}>
+                                                        {status.label}
+                                                    </MenuItem>
+                                                ))}
+                                            </Menu>
+                                        )}
+
                                     </TableCell>
                                 </TableRow>
                             ))}

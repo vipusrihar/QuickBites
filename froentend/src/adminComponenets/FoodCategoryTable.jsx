@@ -5,7 +5,7 @@ import { Delete, Edit } from '@mui/icons-material';
 import CreateCategoryForm from './CreateCategoryForm';
 import { useDispatch, useSelector } from 'react-redux';
 import { getRestaurantsCategory } from '../state/restaurant/Action';
-const menu = [1, 1, 1, 1]
+
 
 const style = {
     position: 'absolute',
@@ -24,7 +24,7 @@ const FoodCategoryTable = () => {
     const { restaurant } = useSelector((store) => store);
     const dispatch = useDispatch();
 
-    const jwt = localStorage("jwt");
+    const jwt = localStorage.getItem("jwt");
 
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
@@ -70,7 +70,8 @@ const FoodCategoryTable = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {restaurant.categories.map((item) => (
+                        {/* restaurant.categories */}
+                            {[1,1,1].map((item) => (
                                 <TableRow
                                     key={item.name}
                                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}

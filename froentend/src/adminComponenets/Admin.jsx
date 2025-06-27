@@ -8,22 +8,23 @@ import Details from './Details';
 import { Route, Routes } from 'react-router-dom';
 import CreateMenuForm from './CreateMenuForm';
 import { useDispatch, useSelector } from 'react-redux';
-import { getRestaurantsCategory} from '../state/restaurant/Action';
-import {fetchRestaurantOrders} from '../state/restaurantOrder/Action';
+import { getRestaurantsCategory } from '../state/restaurant/Action';
+import { fetchRestaurantOrders } from '../state/restaurantOrder/Action';
 const Admin = () => {
   const dispatch = useDispatch();
-  const jwt = localStorage("jwt");
-  const {restaurant} = useSelector(store => store)
+  const jwt = localStorage.getItem("jwt");
+ const restaurant = useSelector(store => store.restaurant);
+
   const handleClose = () => {
     // Add close logic for temporary drawer on small screens
   };
 
 
-  useEffect( ()=>{
-    dispatch(getRestaurantsCategory({jwt,restaurantId:restaurant.usersRestaurant?.id}));
-    dispatch(fetchRestaurantOrders({jwt, restaurantId: restaurant.usersRestaurant}))
+  useEffect(() => {
+    dispatch(getRestaurantsCategory({ jwt, restaurantId: restaurant?.usersRestaurant?.id }));
+    dispatch(fetchRestaurantOrders({ jwt, restaurantId: restaurant?.usersRestaurant?.id }))
 
-  },[])
+  }, [])
 
   return (
     <div>
@@ -39,7 +40,7 @@ const Admin = () => {
             <Route path="menu" element={<Menu />} />
             <Route path="category" element={<FoodCategory />} />
             <Route path="details" element={<Details />} />
-            <Route path='menu/addMenu' element={<CreateMenuForm/>}/>
+            <Route path='menu/addMenu' element={<CreateMenuForm />} />
           </Routes>
         </div>
       </div>

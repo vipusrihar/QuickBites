@@ -6,18 +6,22 @@ import CreateMenuForm from '../adminComponenets/CreateMenuForm'
 import { useSelector } from 'react-redux'
 
 export const AdminRoute = () => {
-    const {restaurant} = useSelector(store => store)
+    const restaurant = useSelector(store => store.restaurant);
+
+
+    console.log("Restaurant:", restaurant);
+
 
     return (
         <div>
             <Routes>
                 <Route path='/*' element={
-                    !restaurant.userRestaurant 
-                    ? 
-                    <CreateRestaurantForm />
-                    : 
-                    <Admin />}>
-                </Route>
+                    !restaurant.usersRestaurant
+                        ?
+                        <CreateRestaurantForm />
+                        :
+                        <Admin/>}
+                />
             </Routes>
         </div>
     )

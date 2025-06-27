@@ -6,7 +6,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import Grid from '@mui/material/Grid';
 import { uploadImageToCloudinary } from './utills/uploadToCloudinary';
 import { useDispatch } from 'react-redux';
-import {createRestaurant} from '../state/restaurant/Action'
+import { createRestaurant } from '../state/restaurant/Action'
 
 const initialValues = {
   name: '',
@@ -20,12 +20,29 @@ const initialValues = {
   instagram: '',
   facebook: '',
   openingHours: '',
+  openingTime: '',
+  closingTime: '',
 };
 
 const CreateRestaurantForm = () => {
   const [uploadImage, setUploadImage] = useState(false);
   const dispatch = useDispatch();
   const jwt = localStorage.getItem("jwt");
+
+  function fixTimeFormat(timeStr) {
+    // Handles "9:00 AM" or "09:00"
+    const date = new Date(`1970-01-01T${timeStr}`);
+    if (isNaN(date)) {
+      // If the input is already in "HH:mm:ss" or invalid, return as-is
+      return timeStr;
+    }
+
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = "00";
+
+    return `${hours}:${minutes}:${seconds}`;
+  }
 
 
   const formik = useFormik({
@@ -42,13 +59,13 @@ const CreateRestaurantForm = () => {
         twitter: values.twitter,
         instagram: values.instagram,
         facebook: values.facebook,
-        openingHours: values.openingHours,
-        openingTime : values.openingTime,
-        closingTime : values.closingTime
+        openingHours: fixTimeFormat(values.openingHours),
+        openingTime: fixTimeFormat(values.openingTime),
+        closingTime: values.closingTime
       };
       console.log('data----', data);
 
-      dispatch(createRestaurant({data, token:jwt}))
+      dispatch(createRestaurant({ data, token: jwt }))
     },
   });
 
@@ -196,10 +213,12 @@ const CreateRestaurantForm = () => {
                 placeholder="9:00 AM "
                 variant="outlined"
                 onChange={formik.handleChange}
-                value={formik.values.openingTime} />
+                value={formik.values.openingTime}
+                type="time"
+              />
             </Grid>
 
-              <Grid size={{ xs: 12, sm: 6 }}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <TextField
                 fullWidth
                 id="closingTime"
@@ -208,7 +227,9 @@ const CreateRestaurantForm = () => {
                 placeholder="10:00 PM"
                 variant="outlined"
                 onChange={formik.handleChange}
-                value={formik.values.closingTime} />
+                value={formik.values.closingTime}
+                type="time"
+              />
             </Grid>
 
             <Grid size={{ xs: 12, sm: 6 }}>

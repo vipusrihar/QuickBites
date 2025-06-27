@@ -11,22 +11,24 @@ const Home = () => {
     const jwt = localStorage.getItem("jwt");
     const navigate = useNavigate();
 
-    const restaurantState = useSelector(store => store.restaurant);
+    const restaurants = useSelector((state) => state.restaurant.restaurants);
+
+
 
 
     useEffect(() => {
-        if (jwt) {
-            dispatch(getAllRestaurants(jwt));
-        }
-        console.log("Restaurants array:", restaurantState.restaurants);
+        dispatch(getAllRestaurants());
+    }, [dispatch]);
+
+    useEffect(() => {
+        console.log("Restaurants array:", restaurants);
         console.log("JWT: ", jwt);
-    }, [dispatch, jwt]);
+    }, [restaurants, jwt]);
 
 
 
     return (
         <div>
-            {/* Banner Section */}
             <section className='banner -z-50 relative flex flex-col justify-center items-center'>
                 <div className='w-[50vw] z-10 text-center'>
                     <p className='text-2xl lg:text-5xl font-bold z-10 py-5'>
@@ -41,20 +43,19 @@ const Home = () => {
                 <div className='fadout'></div>
             </section>
 
-            {/* Top Meals Carousel */}
+
             <section className='p-10 lg:py-10 lg:px-20'>
                 <p className='text-2xl font-semibold text-gray-400 py-3 pb-10'>Top Meals</p>
                 <MutliItemCarousel />
             </section>
 
-            {/* Restaurant Cards Section */}
             <section className='px-10 lg:py-10 lg:px-20 pb-5'>
                 <h1 className='text-2xl font-semibold text-gray-400'>
                     Order From our HandPicked Favorites
                 </h1>
                 <div className='m-5 flex flex-wrap justify-around items-center gap-5'>
-                    {restaurantState.restaurants.length > 0 ? (
-                        restaurantState.restaurants.map((rest) => (
+                    {restaurants.length > 0 ? (
+                        restaurants.map((rest) => (
                             <RestaurantCard key={rest.id} restaurant={rest} />
                         ))
                     ) : (

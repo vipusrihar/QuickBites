@@ -55,6 +55,7 @@ const { data } = await axios.post(`${API_URL}/api/auth/signin`, reqData.userData
 
     if (data.jwt) {
       localStorage.setItem("jwt", data.jwt);
+      console.log(localStorage.getItem("jwt"))
     }
 
     dispatch({ type: LOGIN_SUCCESS, payload: data.jwt });

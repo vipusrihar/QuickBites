@@ -2,7 +2,7 @@ import * as actionTypes from './ActionTypes';
 
 const initialState = {
     restaurants: [],          // all restaurants
-    usersRestsurants: null,   // restaurants created by user
+    usersRestaurant: null,   // restaurants created by user
     restaurant: null,         // single restaurant details
     loading: false,           // loading state
     error: null               // error messages
@@ -26,7 +26,7 @@ export const restaurantReducer = (state = initialState, action) => {
             return {
                 ...state,
                 loading: false,
-                usersRestsurants: action.payload,
+                usersRestaurant: action.payload,
             };
         }
 
@@ -52,7 +52,7 @@ export const restaurantReducer = (state = initialState, action) => {
             return {
                 ...state,
                 loading: false,
-                usersRestsurants: action.payload,
+                usersRestaurant: action.payload,
             };
         }
 
@@ -64,8 +64,8 @@ export const restaurantReducer = (state = initialState, action) => {
                 restaurants: state.restaurants.filter(
                     (item) => item.id !== action.payload
                 ),
-                usersRestsurants: state.usersRestsurants
-                    ? state.usersRestsurants.filter((item) => item.id !== action.payload)
+                usersRestaurant: state.usersRestaurant
+                    ? state.usersRestaurant.filter((item) => item.id !== action.payload)
                     : null,
             };
         }

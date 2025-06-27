@@ -22,11 +22,11 @@ export const fetchFoodTypes = () => async (dispatch) => {
   }
 };
 
-export const fetchFoodCategories = () => async (dispatch) => {
+export const fetchFoodCategories = (resId) => async (dispatch) => {
   try {
     dispatch({ type: GET_FOOD_CATEGORY_REQUEST });
 
-    const { data } = await axios.get("/api/enums/food-categories");
+    const { data } = await axios.get(`/api/restaurant/categories/${resId}`);
     dispatch({ type: GET_FOOD_CATEGORY_SUCCESS, payload: data });
   } catch (error) {
     dispatch({

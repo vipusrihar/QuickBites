@@ -24,20 +24,26 @@ import {
 } from './ActionTypes';
 
 
-export const getAllRestaurants = (token) => {
+export const getAllRestaurants = () => {
     return async (dispatch) => {
         dispatch({ type: GET_ALL_RESTAURANTS_REQUEST });
         try {
-            const { data } = await api.get('/api/restaurant/allRest', {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
+            const response =  await api.get('/api/restaurant/allRest');
+            const data = response.data;
+             console.log("All Restaurants ", data);
             dispatch({ type: GET_ALL_RESTAURANTS_SUCCESS, payload: data })
-            console.log("All Restaurants ", data);
+           
         } catch (error) {
-            console.error("Error happenend", error)
-            dispatch({ type: GET_ALL_RESTAURANTS_FAILURE, payload: error })
+            console.error("Axios Error: ", {
+                message: error.message,
+                status: error.response?.status,
+                data: error.response?.data,
+            });
+
+            dispatch({
+                type: GET_ALL_RESTAURANTS_FAILURE,
+                payload: error.response?.data?.message || error.message,
+            });
         }
 
     }
@@ -55,7 +61,12 @@ export const getRestaurantById = (reqData) => {
             console.log("restaurant fetched sucessfully :", response)
             dispatch({ type: GET_RESTAURANT_BY_ID_SUCCESS, payload: response.data })
         } catch (error) {
-            console.error("Error happenend", error)
+            console.error("Axios Error: ", {
+                message: error.message,
+                status: error.response?.status,
+                data: error.response?.data,
+            });
+
             dispatch({ type: GET_RESTAURANT_BY_ID_FAILURE, payload: error })
         }
 
@@ -67,14 +78,19 @@ export const getRestaurantByUserId = (token) => {
     return async (dispatch) => {
         dispatch({ type: GET_RESTAURNT_BY_USER_ID_REQUEST });
         try {
-            const { data } = await api.get(`/api/admin/restaurant/user`, {
+            const { data } = await api.get(`/api/restaurant/user`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
             });
             dispatch({ type: GET_RESTAURNT_BY_USER_ID_SUCCESS, payload: data })
         } catch (error) {
-            console.error("Error happenend", error)
+            console.error("Axios Error: ", {
+                message: error.message,
+                status: error.response?.status,
+                data: error.response?.data,
+            });
+
             dispatch({ type: GET_RESTAURNT_BY_USER_ID_FAILURE, payload: error })
         }
 
@@ -82,22 +98,36 @@ export const getRestaurantByUserId = (token) => {
 }
 
 export const createRestaurant = (reqData) => {
-    return async (dispatch) => {
-        dispatch({ type: CREATE_RESTAURANT_REQUEST });
-        try {
-            const { data } = await api.post(`/api/admin/restaurants`, reqData.data, {
-                headers: {
-                    Authorization: `Bearer ${reqData.token}`,
-                },
-            });
-            dispatch({ type: CREATE_RESTAURANT_SUCCESS, payload: data })
-        } catch (error) {
-            console.error("Error happenend", error)
-            dispatch({ type: CREATE_RESTAURANT_FAILURE, payload: error })
-        }
+  return async (dispatch) => {
+    dispatch({ type: CREATE_RESTAURANT_REQUEST });
 
+    try {
+      const response = await api.post(`/api/restaurant/`, reqData.data, {
+        headers: {
+          Authorization: `Bearer ${reqData.token}`,
+        },
+      });
+
+      dispatch({
+        type: CREATE_RESTAURANT_SUCCESS,
+        payload: response.data,
+      });
+
+    } catch (error) {
+      console.error("Axios Error: ", {
+                message: error.message,
+                status: error.response?.status,
+                data: error.response?.data,
+            });
+
+
+      dispatch({
+        type: CREATE_RESTAURANT_FAILURE,
+        payload: error.response?.data?.message || error.message || "Something went wrong",
+      });
     }
-}
+  };
+};
 
 
 
@@ -112,7 +142,12 @@ export const updateRestaurant = ({restaurantId, restaurantData , jwt}) => {
             });
             dispatch({ type: UPDATE_RESTAURANT_SUCCESS, payload: response.data})
         } catch (error) {
-            console.error("Error happenend", error)
+            console.error("Axios Error: ", {
+                message: error.message,
+                status: error.response?.status,
+                data: error.response?.data,
+            });
+
             dispatch({ type: UPDATE_RESTAURANT_FAILURE, payload: error })
         }
 
@@ -124,14 +159,19 @@ export const deleteRestaurant = ({restaurantId,jwt}) => {
     return async (dispatch) => {
         dispatch({ type: DELETE_RESTAURANT_REQUEST });
         try {
-            const response = await api.delete(`/api/admin/restaurant/${restaurantId}`, {
+            const response = await api.delete(`/api/restaurant/${restaurantId}`, {
                 headers: {
                     Authorization: `Bearer ${jwt}`,
                 },
             });
             dispatch({ type: DELETE_RESTAURANT_SUCCESS, payload: response.data})
         } catch (error) {
-            console.error("Error happenend", error)
+            console.error("Axios Error: ", {
+                message: error.message,
+                status: error.response?.status,
+                data: error.response?.data,
+            });
+
             dispatch({ type: DELETE_RESTAURANT_FAILURE, payload: error })
         }
 
@@ -149,7 +189,12 @@ export const updateRestaurantStatus = ({restaurantId, jwt}) => {
             });
             dispatch({ type: UPDATE_RESTAURANT_STATUS_SUCCESS, payload: response.data})
         } catch (error) {
-            console.error("Error happenend", error)
+            console.error("Axios Error: ", {
+                message: error.message,
+                status: error.response?.status,
+                data: error.response?.data,
+            });
+
             dispatch({ type: UPDATE_RESTAURANT_STATUS_FAILURE, payload: error })
         }
 
@@ -163,12 +208,36 @@ export const createCategoryAction = () => {
     
 }
 
-//getMenuItemsByRestaurantId
-export const getMenuItemsByRestaurantId = () => {
 
-}
+export const getMenuItemsByRestaurantId = (restaurantId) => {
+  return async (dispatch) => {
+    try {
+      const response = await fetch(`/api/menus/${restaurantId}`);
+      const data = await response.json();
 
-// getRestaurantsCategory
+      dispatch({
+        type: 'SET_MENU_ITEMS',
+        payload: data
+      });
+    } catch (error) {
+      console.error('Error fetching menu items:', error);
+    }
+  };
+};
+
+
 export const getRestaurantsCategory = () => {
-    
-}
+  return async (dispatch) => {
+    try {
+      const response = await fetch(`/api/categories`);
+      const data = await response.json();
+
+      dispatch({
+        type: 'SET_CATEGORIES',
+        payload: data
+      });
+    } catch (error) {
+      console.error('Error fetching restaurant categories:', error);
+    }
+  };
+};

@@ -32,8 +32,8 @@ function App() {
   }, [dispatch, jwt]);
 
   useEffect(() => {
-    if (auth?.user || jwt) {
-      dispatch(getRestaurantByUserId(auth?.jwt || jwt));
+    if (jwt) {
+      dispatch(getRestaurantByUserId( jwt));
     }
   }, [auth?.user]);
 
@@ -69,6 +69,7 @@ function App() {
           {/* These two routes are placeholders for the modal */}
           <Route path="/login" element={<></>} />
           <Route path="/register" element={<></>} />
+
 
           <Route path="/admin/restaurants/*" element={<AdminRoute />} />
 
